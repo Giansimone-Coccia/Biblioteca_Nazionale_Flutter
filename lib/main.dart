@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
 import 'login.dart';
 import 'register.dart';
 
@@ -13,17 +12,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Biblioteca Nazionale',
       theme: ThemeData(
         primaryColor: const Color(0xFF6D77FB),
-        // Imposta il colore primario come #6D77FB
-        backgroundColor: Colors
-            .white, // Imposta il colore di sfondo del contesto come bianco
+        backgroundColor: Colors.white,
         // ...definisci altri colori personalizzati qui...
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
+        '/': (context) => const MyHomePage(),
         '/login': (context) => Login(),
         '/registration': (context) => Register(),
       },
@@ -32,18 +29,14 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = Theme.of(context).primaryColor; // Ottenere il primaryColor dal tema
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      backgroundColor: Theme.of(context)
-          .backgroundColor, // Imposta il colore di sfondo del contesto
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -51,7 +44,6 @@ class MyHomePage extends StatelessWidget {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/images/welcome_background.png"),
-                // Inserisci il percorso dell'immagine di sfondo
                 fit: BoxFit.cover,
               ),
             ),
@@ -62,11 +54,9 @@ class MyHomePage extends StatelessWidget {
               children: <Widget>[
                 Image.asset(
                   'assets/images/logo_welcome.png',
-                  // Inserisci il percorso dell'immagine da posizionare sopra i pulsanti
                   width: 200,
                 ),
                 SizedBox(height: 16),
-                // Aggiunto uno spazio vuoto tra l'immagine e il testo
                 const Text(
                   'Biblioteca Nazionale',
                   style: TextStyle(
@@ -74,7 +64,6 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 16),
-                // Aggiunto uno spazio vuoto tra il testo e i pulsanti
                 SizedBox(
                   width: 300,
                   child: ElevatedButton(
@@ -85,8 +74,7 @@ class MyHomePage extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      primary: const Color(
-                          0xFF6D77FB), // Imposta il colore personalizzato del pulsante come #6D77FB
+                      primary: primaryColor, // Utilizzare primaryColor ottenuto dal tema
                     ),
                     child: const Text(
                       'Accedi',
@@ -97,7 +85,6 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 16),
-                // Aggiunto uno spazio vuoto tra i pulsanti
                 SizedBox(
                   width: 300,
                   child: ElevatedButton(
@@ -108,10 +95,9 @@ class MyHomePage extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      primary: const Color(
-                          0xFF6D77FB), // Imposta il colore personalizzato del pulsante come #6D77FB
+                      primary: primaryColor, // Utilizzare primaryColor ottenuto dal tema
                     ),
-                    child: Text(
+                    child: const Text(
                       'Registrati',
                       style: TextStyle(
                         fontSize: 18,
