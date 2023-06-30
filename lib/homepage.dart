@@ -8,9 +8,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/welcome_background.png'),
+              image: AssetImage('assets/images/welcome_background.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -22,13 +22,13 @@ class HomePage extends StatelessWidget {
                 width: 125,
                 height: 125,
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                   ),
                   child: Center(
                     child: Image.asset(
-                      'assets/round_menu_book_48.png',
+                      'lib/assets/images/round_menu_book_48.xml',
                       width: 65,
                       height: 65,
                       fit: BoxFit.contain,
@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
+              const Text(
                 'App Name',
                 style: TextStyle(
                   fontSize: 25,
@@ -49,14 +49,14 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushNamed(context, '/login');
                 },
-                child: Text('Login'),
+                child: const Text('Login'),
               ),
               const SizedBox(height: 4),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/registration');
                 },
-                child: Text('Register'),
+                child: const Text('Register'),
               ),
             ],
           ),

@@ -57,7 +57,9 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - lib/assets/images/round_menu_book_48.xml
+    - assets/images/round_menu_book_48.xml
+    - assets/images/welcome_background.png
+    - assets/images/google_icon.png
 
 
   # The following line ensures that the Material Icons font is

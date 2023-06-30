@@ -77,7 +77,7 @@ class Login extends StatelessWidget {
                     ),
                   ),
                   Image.asset(
-                    'assets/google_icon.png',
+                    'assets/images/google_icon.png',
                     width: 114.0,
                     height: 57.0,
                   ),
