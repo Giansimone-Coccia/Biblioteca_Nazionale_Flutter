@@ -60,6 +60,7 @@ flutter:
     - assets/images/round_menu_book_48.xml
     - assets/images/welcome_background.png
     - assets/images/google_icon.png
+    - assets/images/logo_welcome.png
 
 
   # The following line ensures that the Material Icons font is
