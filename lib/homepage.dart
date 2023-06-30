@@ -1,41 +1,65 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
-import 'register.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
-      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Login(),
-                  ),
-                );
-              },
-              child: Text('Accedi'),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/welcome_background.png'),
+              fit: BoxFit.cover,
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Register(),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 125,
+                height: 125,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
                   ),
-                );
-              },
-              child: Text('Registrati'),
-            ),
-          ],
+                  child: Center(
+                    child: Image.asset(
+                      'assets/round_menu_book_48.png',
+                      width: 65,
+                      height: 65,
+                      fit: BoxFit.contain,
+                      semanticLabel: 'Notifications Image',
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'App Name',
+                style: TextStyle(
+                  fontSize: 25,
+                ),
+              ),
+              const SizedBox(height: 4),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: Text('Login'),
+              ),
+              const SizedBox(height: 4),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/registration');
+                },
+                child: Text('Register'),
+              ),
+            ],
+          ),
         ),
       ),
     );
