@@ -1,4 +1,17 @@
 import 'package:flutter/material.dart';
+import 'app_theme.dart';
+
+/*
+class MyTheme extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: AppTheme.lightTheme, // Applica il tema personalizzato lightTheme
+      // altre configurazioni dell'app
+    );
+  }
+}
+*/
 
 class HomePage extends StatelessWidget {
   @override
@@ -10,7 +23,6 @@ class HomePage extends StatelessWidget {
             constraints: BoxConstraints.expand(),
             child: Stack(
               children: [
-
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -35,33 +47,46 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class MyNavigationMenu extends StatelessWidget {
+class MyNavigationMenu extends StatefulWidget {
+  @override
+  _MyNavigationMenuState createState() => _MyNavigationMenuState();
+}
+
+class _MyNavigationMenuState extends State<MyNavigationMenu> {
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Menu(
+      selectedIndex: _selectedIndex,
+      onItemSelected: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
       items: [
         MenuItem(
-          id: 'bookListFragment',
+          id: 'bookList',
           icon: Icons.home,
           title: 'Home',
         ),
         MenuItem(
-          id: 'myBooksFragment',
+          id: 'myBooks',
           icon: Icons.book,
           title: 'Books',
         ),
         MenuItem(
-          id: 'myReviewsFragment',
+          id: 'myReviews',
           icon: Icons.rate_review,
           title: 'Reviews',
         ),
         MenuItem(
-          id: 'notificationsFragment',
+          id: 'notifications',
           icon: Icons.notifications,
           title: 'Notifications',
         ),
         MenuItem(
-          id: 'profileInfoFragment',
+          id: 'profileInfo',
           icon: Icons.person,
           title: 'Profile',
         ),
@@ -84,38 +109,33 @@ class MenuItem {
 
 class Menu extends StatelessWidget {
   final List<MenuItem> items;
+  final int selectedIndex;
+  final Function(int) onItemSelected;
 
-  const Menu({Key? key, required this.items}) : super(key: key);
+  const Menu({
+    Key? key,
+    required this.items,
+    required this.selectedIndex,
+    required this.onItemSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       items: items.map((item) {
         return BottomNavigationBarItem(
-          icon: Icon(item.icon),
-          label: item.title,
+          icon: Icon(
+            item.icon,
+            color: Theme.of(context).primaryColor, // Imposta il colore primario del tema per l'icona
+          ),
+          label: selectedIndex == items.indexOf(item) ? item.title : '',
         );
       }).toList(),
-      onTap: (index) {
-        // Gestisci l'evento di selezione del menu
-        switch (items[index].id) {
-          case 'bookListFragment':
-          // Azione per la schermata Home
-            break;
-          case 'myBooksFragment':
-          // Azione per la schermata Books
-            break;
-          case 'myReviewsFragment':
-          // Azione per la schermata Reviews
-            break;
-          case 'notificationsFragment':
-          // Azione per la schermata Notifications
-            break;
-          case 'profileInfoFragment':
-          // Azione per la schermata Profile
-            break;
-        }
-      },
+      selectedItemColor: Theme.of(context).primaryColor,
+      currentIndex: selectedIndex,
+      onTap: onItemSelected,
     );
   }
 }
+
+
