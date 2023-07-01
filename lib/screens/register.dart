@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'login.dart';
-import 'main.dart';
+import '../main.dart';
 
 class Register extends StatelessWidget {
   const Register({Key? key});

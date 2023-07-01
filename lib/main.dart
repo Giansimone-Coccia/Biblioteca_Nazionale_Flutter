@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
-import 'login.dart';
-import 'register.dart';
+import 'routes/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,13 +17,8 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         // ...definisci altri colori personalizzati qui...
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const MyHomePage(),
-        '/login': (context) => Login(),
-        '/registration': (context) => Register(),
-        '/homepage': (context) => HomePage(),
-      },
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: AppRoutes.generateRoute,
     );
   }
 }
