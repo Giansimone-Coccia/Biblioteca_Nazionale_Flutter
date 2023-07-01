@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'homepage.dart';
 import 'login.dart';
 import 'register.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const MyHomePage(),
         '/login': (context) => Login(),
         '/registration': (context) => Register(),
+        '/homepage': (context) => HomePage(),
       },
     );
   }
