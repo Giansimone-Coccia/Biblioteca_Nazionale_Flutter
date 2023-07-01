@@ -6,10 +6,9 @@ class BookList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:false,
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppBarSearch(),
       body: Column(
-
         children: [
           /*LinearProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -29,17 +28,18 @@ class BookList extends StatelessWidget {
 
 final Color customPurpleColor = const Color(0xFF6D77FB);
 
-
-class CustomAppBarSearch extends StatelessWidget implements PreferredSizeWidget {
-
+class CustomAppBarSearch extends StatelessWidget
+    implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent, // Sfondo trasparente
-      elevation: 0, // Rimuovi l'ombra dell'AppBar
+      backgroundColor: Colors.transparent,
+      // Sfondo trasparente
+      elevation: 0,
+      // Rimuovi l'ombra dell'AppBar
       toolbarHeight: kToolbarHeight,
       title: SearchView(),
       automaticallyImplyLeading: false, // Nascondi l'icona di andata indietro
@@ -68,39 +68,41 @@ class SearchView extends StatelessWidget {
           ),
           border: InputBorder.none,
         ),
-        style: TextStyle(color: Colors.white), // Cambia il colore del testo di input
+        style: TextStyle(
+            color: Colors.white), // Cambia il colore del testo di input
       ),
     );
   }
 }
 
-
-
-
 class WelcomeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-
       reverse: true,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
             'assets/images/best_home_library_apps.webp',
-            height: 200,
+            height: 250,
             fit: BoxFit.fitHeight,
           ),
-          Text(
-            'Welcome',
-            style: TextStyle(fontSize: 24),
+          Padding(
+            padding: EdgeInsets.all(16.0), // Aggiunge il padding desiderato
+            child: Center(
+              child: Text(
+                'Welcome to the app of\nBiblioteca Nazionale',
+                style: TextStyle(fontSize: 24),
+                textAlign: TextAlign.center, // Centra il testo
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 }
-
 
 class BookListView extends StatelessWidget {
   @override
@@ -114,5 +116,3 @@ class BookListView extends StatelessWidget {
     );
   }
 }
-
-
