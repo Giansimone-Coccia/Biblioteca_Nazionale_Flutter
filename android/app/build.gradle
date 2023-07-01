@@ -51,6 +51,9 @@ android {
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
+        minSdkVersion 21
+        targetSdkVersion flutter.targetSdkVersion
+        applicationId "com.auth0.samples"
         versionName flutterVersionName
     }
 
