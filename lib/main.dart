@@ -54,9 +54,14 @@ class MyHomePage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(
-                  'assets/images/logo_welcome.png',
-                  width: 200,
+                CircleAvatar(
+                  backgroundColor: primaryColor, // Colore di sfondo del cerchio viola
+                  radius: 80,
+                  child: Icon(
+                    Icons.menu_book_rounded,
+                    size: 80,
+                    color: Colors.white,
+                  ),
                 ),
                 SizedBox(height: 16),
                 const Text(

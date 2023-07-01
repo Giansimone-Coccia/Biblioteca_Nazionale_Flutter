@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'homepage.dart';
 
+import 'bookList.dart';
+import 'register.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key});
@@ -8,7 +10,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Definisci il nuovo colore
-    final Color customPurpleColor = Color(0xFF6D77FB);
+    final Color customPurpleColor = const Color(0xFF6D77FB);
 
     return Scaffold(
       body: Center(
@@ -35,7 +37,7 @@ class Login extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 40.0),
+                    const SizedBox(height: 40.0),
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -86,6 +88,9 @@ class Login extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/homepage');
+                      //  Navigator.push(context, MaterialPageRoute(builder: (context) => BookList()));
+                        // o utilizza il metodo pushNamed se hai configurato la rotta "bookList" in main.dart
+                        // Navigator.pushNamed(context, '/bookList');
                       },
                       child: Text(
                         'Login',
@@ -102,8 +107,8 @@ class Login extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 12.0),
+                    const SizedBox(height: 12.0),
                     const Text(
-
                       'Login with',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -111,13 +116,14 @@ class Login extends StatelessWidget {
                         fontSize: 14.0,
                       ),
                     ),
+                    SizedBox(height: 4.0),
                     Image.asset(
                       'assets/images/google_icon.png',
                       width: 100.0,
                       height: 50.0,
                     ),
-                    SizedBox(height: 8.0),
-                    const Row(
+                    SizedBox(height: 4.0),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
@@ -127,15 +133,23 @@ class Login extends StatelessWidget {
                             fontSize: 14.0,
                           ),
                         ),
-                        Text(
-                          'Register now',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 14.0,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
+                            // o utilizza il metodo pushNamed se hai configurato la rotta "register" in main.dart
+                            // Navigator.pushNamed(context, '/register');
+                          },
+                          child: Text(
+                            'Register now',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 14.0,
+                            ),
                           ),
                         ),
                       ],
                     ),
+                    SizedBox(height: 12.0),
                   ],
                 ),
               ),
