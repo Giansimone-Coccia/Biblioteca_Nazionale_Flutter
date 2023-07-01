@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
+import 'bookList.dart';
 
 /*
 class MyTheme extends StatelessWidget {
@@ -14,9 +15,16 @@ class MyTheme extends StatelessWidget {
 */
 
 class HomePage extends StatelessWidget {
+  final Color customPurpleColor = const Color(0xFF6D77FB);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Colors.transparent,
+          toolbarHeight: kToolbarHeight,
+          title: SearchView(),
+        ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return ConstrainedBox(

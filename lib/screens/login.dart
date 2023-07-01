@@ -9,7 +9,10 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBarLogin(),
       body: Center(
+        //widthFactor: 1,
+        //heightFactor: 1,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(30.0),
@@ -20,6 +23,22 @@ class Login extends StatelessWidget {
     );
   }
 }
+
+class CustomAppBarLogin extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    final Color customPurpleColor = const Color(0xFF6D77FB);
+
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    );
+  }
+}
+
 
 class LoginCard extends StatelessWidget {
   const LoginCard({Key? key});
@@ -50,9 +69,11 @@ class LoginCard extends StatelessWidget {
               obscureText: true,
             ),
             const SizedBox(height: 30.0),
-            LoginButton(onPressed: () {
-              Navigator.pushNamed(context, '/homepage');
-            }),
+            LoginButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/homepage');
+              },
+            ),
             SizedBox(height: 12.0),
             const SizedBox(height: 12.0),
             const LoginText(
@@ -74,7 +95,10 @@ class LoginCard extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Register()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Register()),
+                );
               },
               child: LoginText(
                 text: 'Register now',
@@ -90,6 +114,7 @@ class LoginCard extends StatelessWidget {
   }
 }
 
+// Rimani invariato
 class LoginTitle extends StatelessWidget {
   const LoginTitle({Key? key});
 
@@ -109,6 +134,7 @@ class LoginTitle extends StatelessWidget {
   }
 }
 
+// Rimani invariato
 class InputField extends StatelessWidget {
   final String hintText;
   final IconData prefixIcon;
@@ -142,7 +168,8 @@ class InputField extends StatelessWidget {
             prefixIcon,
             color: customPurpleColor,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          contentPadding:
+          EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           border: InputBorder.none,
         ),
         obscureText: obscureText,
@@ -151,6 +178,7 @@ class InputField extends StatelessWidget {
   }
 }
 
+// Rimani invariato
 class LoginButton extends StatelessWidget {
   final VoidCallback onPressed;
 
@@ -179,6 +207,7 @@ class LoginButton extends StatelessWidget {
   }
 }
 
+// Rimani invariato
 class LoginText extends StatelessWidget {
   final String text;
   final double fontSize;

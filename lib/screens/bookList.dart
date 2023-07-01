@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 
 class BookList extends StatelessWidget {
-
   final Color customPurpleColor = const Color(0xFF6D77FB);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: customPurpleColor,
-        toolbarHeight: kToolbarHeight,
-        title: SearchView(),
-      ),
+      appBar: CustomAppBar(),
       body: Column(
         children: [
           LinearProgressIndicator(
@@ -19,32 +14,62 @@ class BookList extends StatelessWidget {
             backgroundColor: Colors.transparent,
           ),
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome',
-                  style: TextStyle(fontSize: 24),
-                ),
-                Image.asset(
-                  'assets/images/best_home_library_apps.png',
-                  height: 250,
-                  fit: BoxFit.fitWidth,
-                ),
-              ],
-            ),
+            child: WelcomeSection(),
           ),
           Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.all(0),
-              children: [
-                // List of books
-              ],
-            ),
+            child: BookListView(),
           ),
         ],
       ),
+    );
+  }
+}
+
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final Color customPurpleColor = const Color(0xFF6D77FB);
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: customPurpleColor,
+      toolbarHeight: kToolbarHeight,
+      title: SearchView(),
+    );
+  }
+}
+
+class WelcomeSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Welcome',
+          style: TextStyle(fontSize: 24),
+        ),
+        Image.asset(
+          'assets/images/best_home_library_apps.png',
+          height: 250,
+          fit: BoxFit.fitWidth,
+        ),
+      ],
+    );
+  }
+}
+
+class BookListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      shrinkWrap: true,
+      padding: EdgeInsets.all(0),
+      children: [
+        // List of books
+      ],
     );
   }
 }
