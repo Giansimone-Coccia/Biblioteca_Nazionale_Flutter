@@ -9,10 +9,10 @@ class BookList extends StatelessWidget {
       appBar: CustomAppBarSearch(),
       body: Column(
         children: [
-          LinearProgressIndicator(
+          /*LinearProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             backgroundColor: Colors.transparent,
-          ),
+          ),*/ //TODO LUCA: abilitarla quando si fa la ricerca del libro !
           Expanded(
             child: WelcomeSection(),
           ),
