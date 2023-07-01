@@ -11,7 +11,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   List<Widget> _widgetOptions = [
     BookList(), // Mostra il contenuto della pagina "Home"
-    Text(''),
+    Text(''),  // Codice per il tasto books
     Text(''),
     Text(''),
     Text(''),
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Books',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.reviews_rounded),
+            icon: Icon(Icons.rate_review),
             label: 'Review',
           ),
           BottomNavigationBarItem(
