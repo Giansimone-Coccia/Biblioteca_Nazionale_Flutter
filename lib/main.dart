@@ -35,87 +35,125 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color primaryColor = Theme.of(context).primaryColor; // Ottenere il primaryColor dal tema
+    final Color primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/welcome_background.png"),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          BackgroundImage(),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  backgroundColor: primaryColor, // Colore di sfondo del cerchio viola
-                  radius: 80,
-                  child: Icon(
-                    Icons.menu_book_rounded,
-                    size: 80,
-                    color: Colors.white,
-                  ),
+                AppLogo(primaryColor: primaryColor),
+                const SizedBox(height: 16),
+                const AppTitle(),
+                const SizedBox(height: 16),
+                AppButton(
+                  buttonText: 'Accedi',
+                  primaryColor: primaryColor,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
                 ),
-                SizedBox(height: 16),
-                const Text(
-                  'Biblioteca Nazionale',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      primary: primaryColor, // Utilizzare primaryColor ottenuto dal tema
-                    ),
-                    child: const Text(
-                      'Accedi',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                SizedBox(
-                  width: 300,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/registration');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      primary: primaryColor, // Utilizzare primaryColor ottenuto dal tema
-                    ),
-                    child: const Text(
-                      'Registrati',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 16),
+                AppButton(
+                  buttonText: 'Registrati',
+                  primaryColor: primaryColor,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/registration');
+                  },
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class BackgroundImage extends StatelessWidget {
+  const BackgroundImage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/welcome_background.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}
+
+class AppLogo extends StatelessWidget {
+  const AppLogo({Key? key, required this.primaryColor}) : super(key: key);
+
+  final Color primaryColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: primaryColor,
+      radius: 80,
+      child: Icon(
+        Icons.menu_book_rounded,
+        size: 80,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class AppTitle extends StatelessWidget {
+  const AppTitle({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Biblioteca Nazionale',
+      style: TextStyle(
+        fontSize: 18,
+      ),
+    );
+  }
+}
+
+class AppButton extends StatelessWidget {
+  const AppButton({
+    Key? key,
+    required this.buttonText,
+    required this.primaryColor,
+    required this.onPressed,
+  }) : super(key: key);
+
+  final String buttonText;
+  final Color primaryColor;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          primary: primaryColor,
+        ),
+        child: Text(
+          buttonText,
+          style: const TextStyle(
+            fontSize: 18,
+          ),
+        ),
       ),
     );
   }

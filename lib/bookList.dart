@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 class BookList extends StatelessWidget {
+
+  final Color customPurpleColor = const Color(0xFF6D77FB);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: customPurpleColor,
         toolbarHeight: kToolbarHeight,
         title: SearchView(),
       ),
