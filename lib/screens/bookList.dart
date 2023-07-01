@@ -6,7 +6,7 @@ class BookList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBarSearch(),
       body: Column(
         children: [
           LinearProgressIndicator(
@@ -25,8 +25,10 @@ class BookList extends StatelessWidget {
   }
 }
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Color customPurpleColor = const Color(0xFF6D77FB);
+final Color customPurpleColor = const Color(0xFF6D77FB);
+
+
+class CustomAppBarSearch extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -34,12 +36,44 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: customPurpleColor,
+      backgroundColor: Colors.transparent, // Sfondo trasparente
+      elevation: 0, // Rimuovi l'ombra dell'AppBar
       toolbarHeight: kToolbarHeight,
       title: SearchView(),
+      automaticallyImplyLeading: false, // Nascondi l'icona di andata indietro
     );
   }
 }
+
+class SearchView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: customPurpleColor,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Search',
+          hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+          prefixIcon: Icon(Icons.search_rounded, color: Colors.white),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.close_rounded, color: Colors.white),
+            onPressed: () {
+              // Clear search query
+            },
+          ),
+          border: InputBorder.none,
+        ),
+        style: TextStyle(color: Colors.white), // Cambia il colore del testo di input
+      ),
+    );
+  }
+}
+
+
+
 
 class WelcomeSection extends StatelessWidget {
   @override
@@ -74,28 +108,4 @@ class BookListView extends StatelessWidget {
   }
 }
 
-class SearchView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Search',
-          prefixIcon: Icon(Icons.search),
-          suffixIcon: IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () {
-              // Clear search query
-            },
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-}
+

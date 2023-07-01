@@ -20,11 +20,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.transparent,
-          toolbarHeight: kToolbarHeight,
-          title: SearchView(),
-        ),
+        appBar: CustomAppBarSearch(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return ConstrainedBox(
