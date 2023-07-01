@@ -9,10 +9,9 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset:false,
       appBar: CustomAppBarLogin(),
       body: Center(
-        //widthFactor: 1,
-        //heightFactor: 1,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(30.0),

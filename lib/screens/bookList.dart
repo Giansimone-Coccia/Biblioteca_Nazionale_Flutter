@@ -6,8 +6,10 @@ class BookList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset:false,
       appBar: CustomAppBarSearch(),
       body: Column(
+
         children: [
           /*LinearProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -78,22 +80,27 @@ class SearchView extends StatelessWidget {
 class WelcomeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Welcome',
-          style: TextStyle(fontSize: 24),
-        ),
-        Image.asset(
-          'assets/images/best_home_library_apps.png',
-          height: 250,
-          fit: BoxFit.fitWidth,
-        ),
-      ],
+    return SingleChildScrollView(
+
+      reverse: true,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/best_home_library_apps.webp',
+            height: 200,
+            fit: BoxFit.fitHeight,
+          ),
+          Text(
+            'Welcome',
+            style: TextStyle(fontSize: 24),
+          ),
+        ],
+      ),
     );
   }
 }
+
 
 class BookListView extends StatelessWidget {
   @override
