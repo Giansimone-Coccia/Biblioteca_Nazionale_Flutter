@@ -99,15 +99,6 @@ class Profile extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8),
-              Text(
-                "You cannot change your Google\ncredentials, contact your provider",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-                textAlign: TextAlign.center,
-              ),
               SizedBox(height: 15),
             ],
           ),
@@ -131,11 +122,14 @@ class Profile extends StatelessWidget {
         TextField(
           controller: emailController,
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: customPurpleColor,
               ),
+              borderRadius: BorderRadius.circular(10),
             ),
             hintText: "Enter email",
           ),
@@ -153,11 +147,14 @@ class Profile extends StatelessWidget {
           controller: passwordController,
           obscureText: true, // Mostra solo puntini
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: customPurpleColor,
               ),
+              borderRadius: BorderRadius.circular(10),
             ),
             hintText: "Enter password",
           ),
@@ -175,11 +172,14 @@ class Profile extends StatelessWidget {
           controller: confirmPasswordController,
           obscureText: true, // Mostra solo puntini
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: customPurpleColor,
               ),
+              borderRadius: BorderRadius.circular(10),
             ),
             hintText: "Confirm password",
           ),
@@ -256,6 +256,7 @@ class Profile extends StatelessWidget {
     );
   }
 
+
   void performDeleteProfile(BuildContext context) {
     showDialog(
       context: context,
@@ -312,11 +313,11 @@ class Profile extends StatelessWidget {
   void updateProfile(BuildContext context) {
     final int? currentUserId = AuthManager().currentUserId;
     if (currentUserId != null) {
-      String newEmail = emailController.text;
-      String newPassword = passwordController.text;
-      String confirmedPassword = confirmPasswordController.text;
+      String newEmail = emailController.text.trim();
+      String newPassword = passwordController.text.trim();
+      String confirmedPassword = confirmPasswordController.text.trim();
 
-      if (newPassword != confirmedPassword) {
+      if (newPassword.isNotEmpty && newPassword != confirmedPassword) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -337,48 +338,34 @@ class Profile extends StatelessWidget {
         return;
       }
 
-      if (newEmail.isNotEmpty || newPassword.isNotEmpty) {
-        // Esegui l'aggiornamento solo se i campi sono stati compilati
-        databaseProvider.updateUserData(currentUserId, newEmail, newPassword);
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Success'),
-              content: Text('Profile updated successfully.'),
-              actions: [
-                TextButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    emailController.clear();
-                    passwordController.clear();
-                    confirmPasswordController.clear();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Error'),
-              content: Text('Please enter new email or password.'),
-              actions: [
-                TextButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+      if (newEmail.isNotEmpty) {
+        databaseProvider.updateUserEmail(currentUserId, newEmail);
       }
+
+      if (newPassword.isNotEmpty) {
+        databaseProvider.updateUserPassword(currentUserId, newPassword);
+      }
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Success'),
+            content: Text('Profile updated successfully.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  emailController.clear();
+                  passwordController.clear();
+                  confirmPasswordController.clear();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } else {
       showDialog(
         context: context,
