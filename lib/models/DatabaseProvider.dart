@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import 'auth_manager.dart';
 import 'dbbooks.dart';
 
 class DatabaseProvider {
@@ -69,8 +70,16 @@ class DatabaseProvider {
       where: 'email = ? AND password = ?',
       whereArgs: [email, password],
     );
-    return result.isNotEmpty;
+
+    if (result.isNotEmpty) {
+      final user = result.first;
+      AuthManager().currentUserId = user['id'] as int?;
+      return true;
+    }
+
+    return false;
   }
+
 
   Future<void> logoutUser(int userId) async {
     final db = await database;
