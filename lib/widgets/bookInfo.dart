@@ -1,8 +1,9 @@
+import 'package:bib_nazionale_flutter/widgets/bookList.dart';
 import 'package:flutter/material.dart';
 
 final Color customPurpleColor = const Color(0xFF6D77FB);
 
-class BookDetailsPage extends StatelessWidget {
+class BookDetailsPage extends StatefulWidget {
   final String title;
   final String authors;
   final String description;
@@ -16,11 +17,52 @@ class BookDetailsPage extends StatelessWidget {
   });
 
   @override
+  _BookDetailsPageState createState() => _BookDetailsPageState();
+}
+
+class _BookDetailsPageState extends State<BookDetailsPage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text('Book Details'),
-        backgroundColor: customPurpleColor,
+        title: Container(
+          decoration: BoxDecoration(
+            color: customPurpleColor,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Search',
+              hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+              prefixIcon: Icon(Icons.search_rounded, color: Colors.white),
+              suffixIcon: Icon(Icons.close_rounded, color: Colors.white),
+              border: InputBorder.none,
+            ),
+            style: TextStyle(color: Colors.white),
+            textInputAction: TextInputAction.none, // Impedisce la visualizzazione della tastiera
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => BookList()),
+              );
+            },
+          ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_rounded),
+          color: customPurpleColor,
+          iconSize: 25.0,
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => BookList()),
+            );
+          },
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        toolbarHeight: kToolbarHeight,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -28,9 +70,11 @@ class BookDetailsPage extends StatelessWidget {
           child: Column(
             children: [
               BookHeader(
-                  image: this.image, title: this.title, authors: this.authors),
+                  image: widget.image,
+                  title: widget.title,
+                  authors: widget.authors),
               SizedBox(height: 16.0),
-              BookInfo(description: this.description),
+              BookInfo(description: widget.description),
               SizedBox(height: 16.0),
               RequestBookButton(),
             ],
@@ -122,7 +166,6 @@ class _BookInfoState extends State<BookInfo> {
                 );
                 final TextPainter textPainter = TextPainter(
                   textAlign: TextAlign.right,
-
                   text: text,
                   textDirection: TextDirection.ltr,
                 );
@@ -132,28 +175,32 @@ class _BookInfoState extends State<BookInfo> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    actualLines > 5 ?
-                    Text(
+                    actualLines > 5
+                        ? Text(
                       widget.description,
                       maxLines: isExpanded ? 5 : null,
-                      overflow: isExpanded ? TextOverflow.ellipsis : TextOverflow.visible,
-                    ):Text(widget.description),
-                    actualLines > 5 ?
-                    GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isExpanded = !isExpanded;
-                          });
-                        },
-                        child: Text(
-                          isExpanded ? 'Read more' : 'Read less',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: customPurpleColor,
-                          ),
-                          textAlign: TextAlign.right,
+                      overflow: isExpanded
+                          ? TextOverflow.ellipsis
+                          : TextOverflow.visible,
+                    )
+                        : Text(widget.description),
+                    actualLines > 5
+                        ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isExpanded = !isExpanded;
+                        });
+                      },
+                      child: Text(
+                        isExpanded ? 'Read more' : 'Read less',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          color: customPurpleColor,
                         ),
-                      ): Container(),
+                        textAlign: TextAlign.right,
+                      ),
+                    )
+                        : Container(),
                   ],
                 );
               },
@@ -164,9 +211,6 @@ class _BookInfoState extends State<BookInfo> {
     );
   }
 }
-
-
-
 
 class RequestBookButton extends StatelessWidget {
   @override
@@ -208,7 +252,6 @@ class CustomMapView extends StatelessWidget {
   }
 }
 
-/*
 void main() {
   runApp(BookDetailsApp());
 }
@@ -230,4 +273,3 @@ class BookDetailsApp extends StatelessWidget {
     );
   }
 }
- */
