@@ -87,7 +87,7 @@ class CustomAppBarSearch extends StatelessWidget implements PreferredSizeWidget 
   CustomAppBarSearch({required this.onSearchChanged});
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 2.0);
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +96,13 @@ class CustomAppBarSearch extends StatelessWidget implements PreferredSizeWidget 
       elevation: 0,
       toolbarHeight: kToolbarHeight,
       title: SearchView(onSearchChanged: onSearchChanged),
+      bottom: PreferredSize(
+        child: Container(
+          color: customPurpleColor,
+          height: 2.0,
+        ),
+        preferredSize: Size.fromHeight(2.0),
+      ),
       automaticallyImplyLeading: false,
     );
   }
