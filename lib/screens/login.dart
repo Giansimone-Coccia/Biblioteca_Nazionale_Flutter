@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
-import 'bookList.dart';
+import '../models/DatabaseProvider.dart';
 import 'register.dart';
 
 class Login extends StatelessWidget {
@@ -9,7 +8,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:false,
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppBarLogin(),
       body: Center(
         child: SingleChildScrollView(
@@ -38,9 +37,50 @@ class CustomAppBarLogin extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-
-class LoginCard extends StatelessWidget {
+class LoginCard extends StatefulWidget {
   const LoginCard({Key? key});
+
+  @override
+  _LoginCardState createState() => _LoginCardState();
+}
+
+class _LoginCardState extends State<LoginCard> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> loginUser(BuildContext context) async {
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    final bool loginSuccess = await DatabaseProvider().loginUser(email, password);
+
+    if (loginSuccess) {
+      Navigator.pushNamed(context, '/homepage');
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Login Failed'),
+          content: Text('Invalid email or password.'),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +100,21 @@ class LoginCard extends StatelessWidget {
             InputField(
               hintText: 'Email',
               prefixIcon: Icons.person,
+              controller: emailController,
             ),
             const SizedBox(height: 20.0),
             InputField(
               hintText: 'Password',
               prefixIcon: Icons.lock,
               obscureText: true,
+              controller: passwordController,
             ),
             const SizedBox(height: 30.0),
             LoginButton(
+              email: emailController.text,
+              password: passwordController.text,
               onPressed: () {
-                Navigator.pushNamed(context, '/homepage');
+                loginUser(context);
               },
             ),
             SizedBox(height: 12.0),
@@ -138,10 +182,12 @@ class InputField extends StatelessWidget {
   final String hintText;
   final IconData prefixIcon;
   final bool obscureText;
+  final TextEditingController controller;
 
   const InputField({
     required this.hintText,
     required this.prefixIcon,
+    required this.controller,
     this.obscureText = false,
     Key? key,
   }) : super(key: key);
@@ -158,6 +204,7 @@ class InputField extends StatelessWidget {
         ),
       ),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
@@ -179,9 +226,16 @@ class InputField extends StatelessWidget {
 
 // Rimani invariato
 class LoginButton extends StatelessWidget {
+  final String email;
+  final String password;
   final VoidCallback onPressed;
 
-  const LoginButton({required this.onPressed, Key? key}) : super(key: key);
+  const LoginButton({
+    required this.email,
+    required this.password,
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
