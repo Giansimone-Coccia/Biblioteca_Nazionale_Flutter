@@ -30,6 +30,10 @@ await user.logout();
 // Utente disconnesso
 */
 
+  String getEmailCurrentUser() {
+    return this.email;
+  }
+
   Future<void> save() async {
     final Database db = await DatabaseProvider.createDatabase();
     await db.insert(
