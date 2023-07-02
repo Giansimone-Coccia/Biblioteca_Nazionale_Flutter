@@ -27,7 +27,7 @@ class BookDetailsPage extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              BookHeader(title: this.title, authors: this.authors),
+              BookHeader(image: this.image, title: this.title, authors: this.authors),
               SizedBox(height: 16.0),
               BookInfo(description: this.description),
               SizedBox(height: 16.0),
@@ -41,10 +41,12 @@ class BookDetailsPage extends StatelessWidget {
 }
 
 class BookHeader extends StatelessWidget {
+  final String image;
   final String title;
   final String authors;
 
   const BookHeader({
+    required this.image,
     required this.title,
     required this.authors,
   });
@@ -57,8 +59,8 @@ class BookHeader extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/book_cover.jpg',
+            Image.network(
+              image,
               width: 200.0,
               height: 300.0,
               fit: BoxFit.cover,
