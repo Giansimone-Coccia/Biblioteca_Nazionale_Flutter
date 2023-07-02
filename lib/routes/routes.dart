@@ -1,9 +1,9 @@
 import 'package:bib_nazionale_flutter/screens/profile.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
-import '/screens/homepage.dart';
-import '/screens/login.dart';
-import '/screens/register.dart';
+import '../screens/homepage.dart';
+import '../screens/login.dart';
+import '../screens/register.dart';
 
 class AppRoutes {
   static const String home = '/';

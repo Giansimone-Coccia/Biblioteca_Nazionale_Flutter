@@ -1,7 +1,7 @@
 import 'package:bib_nazionale_flutter/screens/profile.dart';
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
-import 'bookList.dart';
+import '../widgets/bookList.dart';
 
 
 class HomePage extends StatefulWidget {

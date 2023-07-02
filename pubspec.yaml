@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   xml: ^5.3.0
+  http: ^0.13.4
   flutter_svg: ^0.22.0
   flutter:
     sdk: flutter
@@ -64,6 +65,7 @@ flutter:
     - assets/images/google_icon.png
     - assets/images/logo_welcome.png
     - assets/images/best_home_library_apps.webp
+    - assets/images/loginbkg.png
 
 
   # The following line ensures that the Material Icons font is
