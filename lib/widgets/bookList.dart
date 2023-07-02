@@ -54,7 +54,7 @@ class _BookListState extends State<BookList> {
             );
             break;
           case '/bookeInfoPage':
-            builder = (BuildContext _) => BookDetailsPage();
+            builder = (BuildContext _) => BookDetailsPage(title: '', authors: '', description: '', image: '',);
             break;
           default:builder = (BuildContext _) => Scaffold(
             resizeToAvoidBottomInset: false,

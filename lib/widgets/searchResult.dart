@@ -15,8 +15,7 @@ class SearchResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        /*navigate(context, '/bookeInfoPage', isRootNavigator: false,
-            arguments: {'id': "index.toString()"});*/
+
         Navigator.push(
           context,
           MaterialPageRoute(

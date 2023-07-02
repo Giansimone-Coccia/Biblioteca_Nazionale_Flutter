@@ -19,7 +19,7 @@ class BookDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-       // title: Text('Book Details'),
+        // title: Text('Book Details'),
         backgroundColor: customPurpleColor,
       ),
       body: SingleChildScrollView(
@@ -27,7 +27,8 @@ class BookDetailsPage extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              BookHeader(image: this.image, title: this.title, authors: this.authors),
+              BookHeader(
+                  image: this.image, title: this.title, authors: this.authors),
               SizedBox(height: 16.0),
               BookInfo(description: this.description),
               SizedBox(height: 16.0),
@@ -86,10 +87,17 @@ class BookHeader extends StatelessWidget {
   }
 }
 
-class BookInfo extends StatelessWidget {
+class BookInfo extends StatefulWidget {
   final String description;
 
   const BookInfo({required this.description});
+
+  @override
+  _BookInfoState createState() => _BookInfoState();
+}
+
+class _BookInfoState extends State<BookInfo> {
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +114,41 @@ class BookInfo extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.0),
-            Text(description),
+            Text(
+              widget.description,
+              maxLines: isExpanded ? null : 5,
+              overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+            ),
+            SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isExpanded = !isExpanded;
+                      });
+                    },
+                    child: Text(
+                      isExpanded ? 'Read less' : 'Read more',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: customPurpleColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
 class RequestBookButton extends StatelessWidget {
   @override
@@ -177,6 +213,3 @@ class BookDetailsApp extends StatelessWidget {
   }
 }
  */
-
-
-

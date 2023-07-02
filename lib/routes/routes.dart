@@ -27,7 +27,7 @@ class AppRoutes {
       case profile:
         return MaterialPageRoute(builder: (_) => Profile());
       case bookInfo:
-        return MaterialPageRoute(builder: (_) => BookDetailsPage());
+        return MaterialPageRoute(builder: (_) => BookDetailsPage(title: '', authors: '', description: '', image: '',));
       default:
         return MaterialPageRoute(
           builder: (_) =>
