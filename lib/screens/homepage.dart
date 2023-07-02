@@ -21,11 +21,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset:false,
+      resizeToAvoidBottomInset: false,
       //appBar: _selectedIndex == 0 ? CustomAppBarSearch() : null,
       body: Center(
-
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions,
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
