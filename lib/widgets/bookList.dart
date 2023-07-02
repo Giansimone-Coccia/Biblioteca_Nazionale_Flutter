@@ -2,6 +2,9 @@ import 'package:bib_nazionale_flutter/widgets/searchResult.dart';
 import 'package:flutter/material.dart';
 import 'package:google_books_api/google_books_api.dart';
 
+import '../main.dart';
+import 'bookInfo.dart';
+
 class BookList extends StatefulWidget {
   @override
   _BookListState createState() => _BookListState();
@@ -29,21 +32,56 @@ class _BookListState extends State<BookList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: CustomAppBarSearch(onSearchChanged: updateSearchQuery),
-      body: Column(
-        children: [
-          if (showWelcomeSection) Expanded(child: WelcomeSection()),
-          Expanded(child: BookListView(books: bookList)),
-        ],
-      ),
+    GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
+
+    return Navigator(
+      key: homeKey,
+      initialRoute: '/homepage',
+      onGenerateRoute: (settings) {
+        WidgetBuilder builder;
+        switch (settings.name) {
+          case '/':
+            builder = (BuildContext _) => Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: CustomAppBarSearch(onSearchChanged: updateSearchQuery),
+              body: Column(
+                children: [
+                  if (showWelcomeSection)
+                    Expanded(child: WelcomeSection()),
+                  Expanded(child: BookListView(books: bookList)),
+                ],
+              ),
+            );
+            break;
+          case '/bookeInfoPage':
+            builder = (BuildContext _) => BookDetailsPage();
+            break;
+          default:builder = (BuildContext _) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: CustomAppBarSearch(onSearchChanged: updateSearchQuery),
+            body: Column(
+              children: [
+                if (showWelcomeSection)
+                  Expanded(child: WelcomeSection()),
+                Expanded(child: BookListView(books: bookList)),
+              ],
+            ),
+          );
+        }
+        return MaterialPageRoute(builder: builder, settings: settings);
+      },
     );
   }
 }
 
-class CustomAppBarSearch extends StatelessWidget
-    implements PreferredSizeWidget {
+Future<void> navigate(BuildContext context, String route,
+    {bool isDialog = false,
+      bool isRootNavigator = true,
+      Map<String, dynamic>? arguments}) =>
+    Navigator.of(context, rootNavigator: isRootNavigator)
+        .pushNamed(route, arguments: arguments);
+
+class CustomAppBarSearch extends StatelessWidget implements PreferredSizeWidget {
   final Function(String) onSearchChanged;
 
   CustomAppBarSearch({required this.onSearchChanged});
@@ -162,13 +200,12 @@ class BookListView extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.all(0),
-      itemCount: (books.length),
+      itemCount: books.length,
       itemBuilder: (context, index) {
-        if (index < books.length-1) {
+        if (index < books.length - 1) {
           Book book = books[index];
           return SearchResult(book: book);
-        }
-        else{
+        } else {
           return Container();
         }
       },
