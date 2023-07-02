@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../models/DatabaseProvider.dart';
+import '../models/dbbooks.dart';
 import 'bookInfo.dart';
 
 final Color customPurpleColor = const Color(0xFF6D77FB);
 
 class BookDeletePage extends StatelessWidget {
-  final String title;
-  final String authors;
-  final String description;
-  final String image;
+  final DBBook book;
 
-  const BookDeletePage({
-    required this.title,
-    required this.authors,
-    required this.description,
-    required this.image,
-  });
+  const BookDeletePage({required this.book});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text('Book Details'),
         backgroundColor: customPurpleColor,
       ),
       body: SingleChildScrollView(
@@ -30,11 +23,14 @@ class BookDeletePage extends StatelessWidget {
           child: Column(
             children: [
               BookHeader(
-                  image: this.image, title: this.title, authors: this.authors),
+                image: book.image,
+                title: book.title,
+                authors: book.authors,
+              ),
               SizedBox(height: 16.0),
-              BookInfo(description: this.description),
+              BookInfo(description: book.description),
               SizedBox(height: 16.0),
-              DeleteBookButton(),
+              DeleteBookButton(book: book),
             ],
           ),
         ),
@@ -43,9 +39,68 @@ class BookDeletePage extends StatelessWidget {
   }
 }
 
+class BookHeader extends StatelessWidget {
+  final String image;
+  final String title;
+  final String authors;
 
+  const BookHeader({
+    required this.image,
+    required this.title,
+    required this.authors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.network(
+          image,
+          width: double.infinity,
+          height: 200,
+          fit: BoxFit.cover,
+        ),
+        SizedBox(height: 16.0),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.0),
+        Text(
+          authors,
+          style: TextStyle(
+            fontSize: 18.0,
+            color: Colors.grey,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class BookInfo extends StatelessWidget {
+  final String description;
+
+  const BookInfo({required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      description,
+      style: TextStyle(fontSize: 16.0),
+    );
+  }
+}
 
 class DeleteBookButton extends StatelessWidget {
+  final DBBook book;
+
+  const DeleteBookButton({required this.book});
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -55,8 +110,7 @@ class DeleteBookButton extends StatelessWidget {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Confirmation'),
-              content:
-                  Text('Are you sure to remove the book from the booked list?'),
+              content: Text('Are you sure to remove the book from the booked list?'),
               actions: <Widget>[
                 TextButton(
                   child: Text('No'),
@@ -67,11 +121,7 @@ class DeleteBookButton extends StatelessWidget {
                 TextButton(
                   child: Text('Yes'),
                   onPressed: () {
-                    // Chiude il popUp
-                    Navigator.of(context).pop();
-                    // Chiude lo screen di eliminazione del libro(BookDeletePage)
-                    // TODO per GIANSIMONE: Prima del pop va tutta la logica per eliminare il libro
-                    Navigator.of(context).pop();
+                    _deleteBook(context);
                   },
                 ),
               ],
@@ -94,32 +144,13 @@ class DeleteBookButton extends StatelessWidget {
       ),
     );
   }
-}
 
+  Future<void> _deleteBook(BuildContext context) async {
+    await DatabaseProvider().deleteBook(book.id!);
 
-
-/*
-void main() {
-  runApp(BookDetailsApp());
-}
-
-class BookDetailsApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Book Details',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: BookDeletePage(
-        title: 'Titolo del libro',
-        authors: 'Nome degli autori',
-        description: 'Descrizione del libro',
-        image: 'a',
-      ),
-    );
+    Navigator.of(context).pop(); // Chiude lo screen di eliminazione del libro
+    Navigator.of(context).pop(); // Torna alla schermata precedente (MyBooks)
   }
 }
- */
 
 
