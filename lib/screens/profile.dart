@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+final Color customPurpleColor = const Color(0xFF6D77FB);
+
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,7 @@ class Profile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              color: Colors.blue,
+              color: customPurpleColor,
               child: buildHeader(),
             ),
             Container(
@@ -26,7 +28,7 @@ class Profile extends StatelessWidget {
 
   AppBar buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.blue,
+      backgroundColor: customPurpleColor,
       elevation: 0,
       automaticallyImplyLeading: false,
       actions: [
@@ -97,6 +99,11 @@ class Profile extends StatelessWidget {
         TextField(
           decoration: InputDecoration(
             border: OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: customPurpleColor, // Colore rosso
+              ),
+            ),
             hintText: "Enter email",
           ),
         ),
@@ -112,6 +119,11 @@ class Profile extends StatelessWidget {
         TextField(
           decoration: InputDecoration(
             border: OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: customPurpleColor, // Colore rosso
+              ),
+            ),
             hintText: "Enter password",
           ),
         ),
@@ -127,6 +139,11 @@ class Profile extends StatelessWidget {
         TextField(
           decoration: InputDecoration(
             border: OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: customPurpleColor, // Colore rosso
+              ),
+            ),
             hintText: "Confirm password",
           ),
         ),
@@ -141,6 +158,7 @@ class Profile extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
+              backgroundColor: customPurpleColor,
             ),
             child: Text(
               "Update",
@@ -162,6 +180,7 @@ class Profile extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
+              backgroundColor: customPurpleColor,
             ),
             child: Text(
               "Delete",
