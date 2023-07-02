@@ -29,7 +29,25 @@ class _MyBooksState extends State<MyBooks> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // ...
+        title: Text(
+          "My Books",
+          style: TextStyle(
+            color: customPurpleColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        bottom: PreferredSize(
+          child: Container(
+            color: customPurpleColor,
+            height: 2.0,
+          ),
+          preferredSize: Size.fromHeight(2.0),
+        ),
+        automaticallyImplyLeading: false,
       ),
       body: Consumer<BooksProvider>(
         builder: (context, booksProvider, _) {
