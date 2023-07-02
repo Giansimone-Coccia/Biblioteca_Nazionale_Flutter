@@ -4,6 +4,7 @@ import '../main.dart';
 import '../screens/homepage.dart';
 import '../screens/login.dart';
 import '../screens/register.dart';
+import '../widgets/bookInfo.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String registration = '/registration';
   static const String homepage = '/homepage';
   static const String profile = '/profile';
+  static const String bookInfo = '/bookeInfoPage';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -24,6 +26,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => HomePage());
       case profile:
         return MaterialPageRoute(builder: (_) => Profile());
+      case bookInfo:
+        return MaterialPageRoute(builder: (_) => BookDetailsPage());
       default:
         return MaterialPageRoute(
           builder: (_) =>

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../app_theme.dart';
 import '../widgets/bookList.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -11,11 +10,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+
   List<Widget> _widgetOptions = [
-    BookList(), // Mostra il contenuto della pagina "Home"
-    Text(''),  // Codice per il tasto books
-    Text(''),
-    Text(''),
+    BookList(),
+    Container(),
+    Container(),
+    Container(),
     Profile(),
   ];
 
@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      //appBar: _selectedIndex == 0 ? CustomAppBarSearch() : null,
       body: Center(
         child: IndexedStack(
           index: _selectedIndex,
@@ -65,3 +64,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_books_api/google_books_api.dart';
 import 'bookInfo.dart';
 
+import '../screens/homepage.dart';
+import 'bookInfo.dart';
+import 'bookList.dart';
+
 class SearchResult extends StatelessWidget {
   final Book book;
 
@@ -11,6 +15,8 @@ class SearchResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        /*navigate(context, '/bookeInfoPage', isRootNavigator: false,
+            arguments: {'id': "index.toString()"});*/
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -76,28 +82,27 @@ class SearchResult extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     /*Row(
-                      children: [
-                        RatingBar(
-                          initialRating: 0,
-                          direction: Axis.horizontal,
-                          allowHalfRing: true,
-                          itemCount: 5,
-                          itemSize: 16,
-                          itemBuilder: (context, _) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                          ),
-                          onRatingUpdate: (rating) {},
+                    children: [
+                       RatingBar(
+                        initialRating: 0,
+                        direction: Axis.horizontal,
+                        allowHalfRing: true,
+                        itemCount: 5,
+                        itemSize: 16,
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
                         ),
-                        Text(
-                          '0.0 (0)',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),*/
+                        onRatingUpdate: (rating) {},
+                      ),
+                      Text(
+                        '0.0 (0)',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),*/
                     Text(
-                      book.volumeInfo != null &&
-                          book.volumeInfo.description.isNotEmpty
+                      book.volumeInfo.description.isNotEmpty
                           ? book.volumeInfo.description
                           : "No description found",
                       style: TextStyle(fontSize: 14),
