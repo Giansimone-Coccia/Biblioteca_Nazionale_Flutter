@@ -141,7 +141,7 @@ class BookInfo extends StatefulWidget {
 }
 
 class _BookInfoState extends State<BookInfo> {
-  bool isExpanded = true;
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {

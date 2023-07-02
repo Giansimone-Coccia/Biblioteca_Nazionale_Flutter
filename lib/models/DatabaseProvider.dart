@@ -171,7 +171,7 @@ class DatabaseProvider {
     );
   }
 
-  Future<void> deleteBook(int bookId) async {
+  Future<void> deleteBook(int? bookId) async {
     final db = await database;
     await db.delete(
       'books',
@@ -179,4 +179,20 @@ class DatabaseProvider {
       whereArgs: [bookId],
     );
   }
+
+  Future<List<DBBook>> getAllBooks() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('books');
+
+    return List.generate(maps.length, (index) {
+      return DBBook(
+        id: maps[index]['id'],
+        title: maps[index]['title'],
+        authors: maps[index]['authors'],
+        image: maps[index]['image'],
+        description: maps[index]['description'],
+      );
+    });
+  }
+
 }

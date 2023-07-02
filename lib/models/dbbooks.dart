@@ -1,12 +1,12 @@
 class DBBook {
-  final int id;
+  final int? id;
   final String title;
   final String authors;
   final String image;
   final String description;
 
   DBBook({
-    required this.id,
+    this.id,
     required this.title,
     required this.authors,
     required this.image,
