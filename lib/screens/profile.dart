@@ -151,6 +151,7 @@ class Profile extends StatelessWidget {
         SizedBox(height: 5),
         TextField(
           controller: passwordController,
+          obscureText: true, // Mostra solo puntini
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             focusedBorder: OutlineInputBorder(
@@ -172,6 +173,7 @@ class Profile extends StatelessWidget {
         SizedBox(height: 5),
         TextField(
           controller: confirmPasswordController,
+          obscureText: true, // Mostra solo puntini
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             focusedBorder: OutlineInputBorder(
@@ -310,49 +312,17 @@ class Profile extends StatelessWidget {
   void updateProfile(BuildContext context) {
     final int? currentUserId = AuthManager().currentUserId;
     if (currentUserId != null) {
-      final String email = emailController.text.trim();
-      final String password = passwordController.text.trim();
-      final String confirmPassword = confirmPasswordController.text.trim();
+      String newEmail = emailController.text;
+      String newPassword = passwordController.text;
+      String confirmedPassword = confirmPasswordController.text;
 
-      bool isEmailUpdated = false;
-      bool isPasswordUpdated = false;
-
-      if (email.isNotEmpty) {
-        isEmailUpdated = true;
-      }
-
-      if (password.isNotEmpty && confirmPassword.isNotEmpty) {
-        if (password == confirmPassword) {
-          isPasswordUpdated = true;
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Error'),
-                content: Text('Passwords do not match.'),
-                actions: [
-                  TextButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-          return; // Return early if passwords don't match
-        }
-      }
-
-      if (!isEmailUpdated && !isPasswordUpdated) {
+      if (newPassword != confirmedPassword) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Error'),
-              content: Text('Please enter email and/or password.'),
+              content: Text('Passwords do not match.'),
               actions: [
                 TextButton(
                   child: Text('OK'),
@@ -364,36 +334,51 @@ class Profile extends StatelessWidget {
             );
           },
         );
-        return; // Return early if no email or password is entered
+        return;
       }
 
-      // Update email if provided
-      if (isEmailUpdated) {
-        databaseProvider.updateUserEmail(currentUserId, email);
+      if (newEmail.isNotEmpty || newPassword.isNotEmpty) {
+        // Esegui l'aggiornamento solo se i campi sono stati compilati
+        databaseProvider.updateUserData(currentUserId, newEmail, newPassword);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Success'),
+              content: Text('Profile updated successfully.'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    emailController.clear();
+                    passwordController.clear();
+                    confirmPasswordController.clear();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Please enter new email or password.'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
-
-      // Update password if provided
-      if (isPasswordUpdated) {
-        databaseProvider.updateUserPassword(currentUserId, password);
-      }
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Success'),
-            content: Text('Profile updated successfully.'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
     } else {
       showDialog(
         context: context,
