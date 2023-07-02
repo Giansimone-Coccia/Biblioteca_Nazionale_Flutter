@@ -301,22 +301,27 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color customContainerColor = const Color(0xFFECEAEA);
+    final Color customPurpleColor = const Color(0xFF6D77FB);
 
     return Container(
       decoration: BoxDecoration(
         color: customContainerColor,
         borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: customPurpleColor, width: 2.0), // Aggiungi questa linea per il bordo viola
       ),
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
           hintText: hintText,
+          hintStyle: TextStyle(color: customPurpleColor), // Aggiungi questa linea per il testo del placeholder viola
           contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           border: InputBorder.none,
         ),
+        style: TextStyle(color: Colors.black), // Aggiungi questa linea per il testo della casella di testo nero
         obscureText: obscureText,
       ),
     );
   }
 }
+
 

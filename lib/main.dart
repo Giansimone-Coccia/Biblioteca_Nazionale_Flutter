@@ -1,12 +1,22 @@
+import 'package:bib_nazionale_flutter/screens/my_books.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'routes/routes.dart';
 
 final GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
 
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BooksProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});

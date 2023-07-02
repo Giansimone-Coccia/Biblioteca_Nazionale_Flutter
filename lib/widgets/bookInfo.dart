@@ -1,6 +1,9 @@
 import 'package:bib_nazionale_flutter/widgets/bookList.dart';
 import 'package:flutter/material.dart';
 
+import '../models/DatabaseProvider.dart';
+import '../models/dbbooks.dart';
+
 final Color customPurpleColor = const Color(0xFF6D77FB);
 
 class BookDetailsPage extends StatefulWidget {
@@ -21,55 +24,14 @@ class BookDetailsPage extends StatefulWidget {
 }
 
 class _BookDetailsPageState extends State<BookDetailsPage> {
+  DatabaseProvider _databaseProvider = DatabaseProvider();
+  String _message = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: PreferredSize(
-          child: Container(
-            color: customPurpleColor,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(1.0),
-        ),
-        title: Container(
-          decoration: BoxDecoration(
-            color: customPurpleColor,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Search',
-              hintStyle: TextStyle(color: Colors.white, fontSize: 16),
-              prefixIcon: Icon(Icons.search_rounded, color: Colors.white),
-              suffixIcon: Icon(Icons.close_rounded, color: Colors.white),
-              border: InputBorder.none,
-            ),
-            style: TextStyle(color: Colors.white),
-            textInputAction: TextInputAction.none, // Impedisce la visualizzazione della tastiera
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => BookList()),
-              );
-            },
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
-          color: customPurpleColor,
-          iconSize: 25.0,
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => BookList()),
-            );
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: kToolbarHeight,
-        automaticallyImplyLeading: false,
+        // Resto del codice
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -77,13 +39,41 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
           child: Column(
             children: [
               BookHeader(
-                  image: widget.image,
-                  title: widget.title,
-                  authors: widget.authors),
+                image: widget.image,
+                title: widget.title,
+                authors: widget.authors,
+              ),
               SizedBox(height: 16.0),
               BookInfo(description: widget.description),
               SizedBox(height: 16.0),
-              RequestBookButton(),
+              RequestBookButton(
+                onPressed: () async {
+                  DBBook book = DBBook(
+                    title: widget.title,
+                    authors: widget.authors,
+                    image: widget.image,
+                    description: widget.description,
+                  );
+                  try {
+                    await _databaseProvider.addBook(book);
+                    setState(() {
+                      _message = 'Book successfully requested!';
+                    });
+                  } catch (e) {
+                    setState(() {
+                      _message = 'Failed to request book. Please try again.';
+                    });
+                  }
+                },
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                _message,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: _message.startsWith('Failed') ? Colors.red : Colors.green,
+                ),
+              ),
             ],
           ),
         ),
@@ -220,12 +210,14 @@ class _BookInfoState extends State<BookInfo> {
 }
 
 class RequestBookButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  RequestBookButton({required this.onPressed});
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        // Handle request book button press
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),

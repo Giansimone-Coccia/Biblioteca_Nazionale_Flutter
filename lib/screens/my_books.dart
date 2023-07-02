@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/DatabaseProvider.dart';
 import '../models/dbbooks.dart';
 import '../widgets/bookDelete.dart';
+
+DatabaseProvider _databaseProvider = DatabaseProvider();
 
 class MyBooks extends StatefulWidget {
   @override
@@ -9,56 +12,37 @@ class MyBooks extends StatefulWidget {
 }
 
 class _MyBooksState extends State<MyBooks> {
-  List<DBBook> _books = [];
-  DatabaseProvider _databaseProvider = DatabaseProvider();
+  late BooksProvider _booksProvider;
 
   @override
   void initState() {
     super.initState();
+    _booksProvider = Provider.of<BooksProvider>(context, listen: false);
     fetchBooks();
   }
 
   Future<void> fetchBooks() async {
-    List<DBBook> books = await _databaseProvider.getAllBooks();
-
-    setState(() {
-      _books = books;
-    });
+    await _booksProvider.fetchBooks();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "My Books",
-          style: TextStyle(
-            color: customPurpleColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        bottom: PreferredSize(
-          child: Container(
-            color: customPurpleColor,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(2.0),
-        ),
-        automaticallyImplyLeading: false,
+        // ...
       ),
-
-      body: ListView.builder(
-        itemCount: _books.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              _navigateToBookDeletePage(_books[index]);
+      body: Consumer<BooksProvider>(
+        builder: (context, booksProvider, _) {
+          return ListView.builder(
+            itemCount: booksProvider.books.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  _navigateToBookDeletePage(booksProvider.books[index]);
+                },
+                child: BookItem(book: booksProvider.books[index]),
+              );
             },
-            child: BookItem(book: _books[index]),
           );
         },
       ),
@@ -130,3 +114,26 @@ class BookItem extends StatelessWidget {
     );
   }
 }
+
+class BooksProvider extends ChangeNotifier {
+  List<DBBook> _books = [];
+
+  List<DBBook> get books => _books;
+
+  Future<void> fetchBooks() async {
+    List<DBBook> books = await _databaseProvider.getAllBooks();
+    _books = books;
+    notifyListeners();
+  }
+
+  void addBook(DBBook book) {
+    _books.add(book);
+    notifyListeners();
+  }
+
+  void removeBook(DBBook book) {
+    _books.remove(book);
+    notifyListeners();
+  }
+}
+
