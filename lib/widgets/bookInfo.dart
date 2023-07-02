@@ -25,6 +25,13 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        bottom: PreferredSize(
+          child: Container(
+            color: customPurpleColor,
+            height: 2.0,
+          ),
+          preferredSize: Size.fromHeight(1.0),
+        ),
         title: Container(
           decoration: BoxDecoration(
             color: customPurpleColor,

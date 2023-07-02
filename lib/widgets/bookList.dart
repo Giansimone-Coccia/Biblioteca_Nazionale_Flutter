@@ -101,7 +101,7 @@ class CustomAppBarSearch extends StatelessWidget implements PreferredSizeWidget 
           color: customPurpleColor,
           height: 2.0,
         ),
-        preferredSize: Size.fromHeight(2.0),
+        preferredSize: Size.fromHeight(1.0),
       ),
       automaticallyImplyLeading: false,
     );

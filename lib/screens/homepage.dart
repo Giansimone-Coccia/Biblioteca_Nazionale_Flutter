@@ -2,6 +2,7 @@ import 'package:bib_nazionale_flutter/screens/my_books.dart';
 import 'package:bib_nazionale_flutter/screens/profile.dart';
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
+import 'package:flutter/painting.dart';
 import '../widgets/bookList.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,31 +29,40 @@ class _HomePageState extends State<HomePage> {
           children: _widgetOptions,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Color(0xFF6D77FB), // Colore viola del bordo superiore
+              width: 2.0, // Larghezza del bordo superiore
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_rounded),
-            label: 'Books',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        unselectedItemColor: Color(0xFF6D77FB),
-        selectedItemColor: Theme.of(context).primaryColor,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+        ),
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book_rounded),
+              label: 'Books',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Color(0xFF6D77FB),
+          selectedItemColor: Theme.of(context).primaryColor,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
       ),
     );
   }
 }
-
