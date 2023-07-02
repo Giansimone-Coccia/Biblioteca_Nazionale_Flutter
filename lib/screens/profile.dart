@@ -8,6 +8,10 @@ final Color customPurpleColor = const Color(0xFF6D77FB);
 DatabaseProvider databaseProvider = DatabaseProvider();
 
 class Profile extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,6 +129,7 @@ class Profile extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextField(
+          controller: emailController,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             focusedBorder: OutlineInputBorder(
@@ -145,6 +150,7 @@ class Profile extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextField(
+          controller: passwordController,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             focusedBorder: OutlineInputBorder(
@@ -165,6 +171,7 @@ class Profile extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextField(
+          controller: confirmPasswordController,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             focusedBorder: OutlineInputBorder(
@@ -180,7 +187,7 @@ class Profile extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // Logica per l'aggiornamento del profilo
+              updateProfile(context);
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -300,4 +307,111 @@ class Profile extends StatelessWidget {
     }
   }
 
+  void updateProfile(BuildContext context) {
+    final int? currentUserId = AuthManager().currentUserId;
+    if (currentUserId != null) {
+      final String email = emailController.text.trim();
+      final String password = passwordController.text.trim();
+      final String confirmPassword = confirmPasswordController.text.trim();
+
+      bool isEmailUpdated = false;
+      bool isPasswordUpdated = false;
+
+      if (email.isNotEmpty) {
+        isEmailUpdated = true;
+      }
+
+      if (password.isNotEmpty && confirmPassword.isNotEmpty) {
+        if (password == confirmPassword) {
+          isPasswordUpdated = true;
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Passwords do not match.'),
+                actions: [
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+          return; // Return early if passwords don't match
+        }
+      }
+
+      if (!isEmailUpdated && !isPasswordUpdated) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Please enter email and/or password.'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return; // Return early if no email or password is entered
+      }
+
+      // Update email if provided
+      if (isEmailUpdated) {
+        databaseProvider.updateUserEmail(currentUserId, email);
+      }
+
+      // Update password if provided
+      if (isPasswordUpdated) {
+        databaseProvider.updateUserPassword(currentUserId, password);
+      }
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Success'),
+            content: Text('Profile updated successfully.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('User ID not found.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }

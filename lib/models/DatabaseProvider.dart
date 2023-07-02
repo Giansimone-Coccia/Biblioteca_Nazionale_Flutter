@@ -113,6 +113,26 @@ class DatabaseProvider {
     );
   }
 
+  Future<void> updateUserEmail(int userId, String newEmail) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {'email': newEmail},
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+  }
+
+  Future<void> updateUserPassword(int userId, String newPassword) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {'password': newPassword},
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+  }
+
   Future<Map<String, dynamic>> getUserDataByEmail(String email) async {
     final db = await database;
     final result = await db.query(
