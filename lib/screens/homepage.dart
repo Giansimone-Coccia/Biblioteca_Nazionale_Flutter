@@ -1,3 +1,4 @@
+import 'package:bib_nazionale_flutter/screens/profile.dart';
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
 import 'bookList.dart';
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
     Text(''),  // Codice per il tasto books
     Text(''),
     Text(''),
-    Text(''),
+    Profile(),
   ];
 
   @override
