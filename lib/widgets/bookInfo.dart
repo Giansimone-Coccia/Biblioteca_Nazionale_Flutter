@@ -97,7 +97,7 @@ class BookInfo extends StatefulWidget {
 }
 
 class _BookInfoState extends State<BookInfo> {
-  bool isExpanded = false;
+  bool isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
@@ -114,33 +114,49 @@ class _BookInfoState extends State<BookInfo> {
               ),
             ),
             SizedBox(height: 8.0),
-            Text(
-              widget.description,
-              maxLines: isExpanded ? null : 5,
-              overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-            ),
-            SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isExpanded = !isExpanded;
-                      });
-                    },
-                    child: Text(
-                      isExpanded ? 'Read less' : 'Read more',
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        color: customPurpleColor,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                final TextSpan text = TextSpan(
+                  text: widget.description,
+                  style: DefaultTextStyle.of(context).style,
+                );
+                final TextPainter textPainter = TextPainter(
+                  textAlign: TextAlign.right,
+
+                  text: text,
+                  textDirection: TextDirection.ltr,
+                );
+                textPainter.layout(maxWidth: constraints.maxWidth);
+                final int actualLines = textPainter.computeLineMetrics().length;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    actualLines > 5 ?
+                    Text(
+                      widget.description,
+                      maxLines: isExpanded ? 5 : null,
+                      overflow: isExpanded ? TextOverflow.ellipsis : TextOverflow.visible,
+                    ):Text(widget.description),
+                    actualLines > 5 ?
+                    GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isExpanded = !isExpanded;
+                          });
+                        },
+                        child: Text(
+                          isExpanded ? 'Read more' : 'Read less',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: customPurpleColor,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ): Container(),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -148,6 +164,8 @@ class _BookInfoState extends State<BookInfo> {
     );
   }
 }
+
+
 
 
 class RequestBookButton extends StatelessWidget {
