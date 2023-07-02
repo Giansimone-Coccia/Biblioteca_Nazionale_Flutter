@@ -1,8 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../models/DatabaseProvider.dart';
 import 'login.dart';
 import '../main.dart';
+
+DatabaseProvider databaseProvider = DatabaseProvider();
 
 class Register extends StatelessWidget {
   const Register({Key? key});
@@ -46,9 +49,140 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
-class RegisterForm extends StatelessWidget {
-  final Color customPurpleColor = const Color(0xFF6D77FB);
-  final Color customContainerColor = const Color(0xFFECEAEA);
+
+class RegisterForm extends StatefulWidget {
+  @override
+  _RegisterFormState createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<RegisterForm> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+  TextEditingController();
+
+  bool isValidEmail(String email) {
+    final RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool isValidPassword(String password) {
+    final RegExp passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$');
+    return passwordRegex.hasMatch(password);
+  }
+
+  void _registerUser() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPasswordController.text.trim();
+
+    if (email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
+      if (password == confirmPassword) {
+        if (isValidEmail(email)) {
+          if (isValidPassword(password)) {
+            // Chiamata al metodo registerUser su databaseProvider
+            databaseProvider.registerUser(email, password);
+
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Success'),
+                  content: Text('User registered successfully.'),
+                  actions: [
+                    TextButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Invalid Password'),
+                  content: Text('Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.'),
+                  actions: [
+                    TextButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Invalid Email'),
+                content: Text('Please enter a valid email address.'),
+                actions: [
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Password Mismatch'),
+              content: Text('The password and confirm password do not match.'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Incomplete Form'),
+            content: Text('Please fill in all the required fields.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,21 +201,26 @@ class RegisterForm extends StatelessWidget {
         ),
         SizedBox(height: 100.0),
         CustomTextField(
+          controller: _emailController,
           hintText: 'Email',
-          obscureText: true,
+          obscureText: false,
         ),
         SizedBox(height: 20.0),
         CustomTextField(
+          controller: _passwordController,
           hintText: 'Password',
           obscureText: true,
         ),
         SizedBox(height: 20.0),
         CustomTextField(
+          controller: _confirmPasswordController,
           hintText: 'Confirm Password',
           obscureText: true,
         ),
         SizedBox(height: 22.0),
-        RegisterButton(),
+        RegisterButton(
+          onPressed: _registerUser,
+        ),
         SizedBox(height: 8.0),
         LoginLink(),
       ],
@@ -91,16 +230,14 @@ class RegisterForm extends StatelessWidget {
 
 class RegisterButton extends StatelessWidget {
   final Color customPurpleColor = const Color(0xFF6D77FB);
+  final VoidCallback onPressed;
+
+  RegisterButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Register()), // Sostituisci `BookList` con la schermata a cui vuoi navigare dopo la registrazione
-        );
-      },
+      onPressed: onPressed,
       child: Text(
         'Register',
         style: TextStyle(
@@ -117,7 +254,6 @@ class RegisterButton extends StatelessWidget {
     );
   }
 }
-
 
 class LoginLink extends StatelessWidget {
   @override
@@ -152,10 +288,12 @@ class LoginLink extends StatelessWidget {
 }
 
 class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
   final String hintText;
   final bool obscureText;
 
   const CustomTextField({
+    required this.controller,
     required this.hintText,
     this.obscureText = false,
   });
@@ -170,6 +308,7 @@ class CustomTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: hintText,
           contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),

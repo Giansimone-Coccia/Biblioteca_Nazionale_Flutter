@@ -1,14 +1,16 @@
+import 'package:bib_nazionale_flutter/screens/profile.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
-import '/screens/homepage.dart';
-import '/screens/login.dart';
-import '/screens/register.dart';
+import '../screens/homepage.dart';
+import '../screens/login.dart';
+import '../screens/register.dart';
 
 class AppRoutes {
   static const String home = '/';
   static const String login = '/login';
   static const String registration = '/registration';
   static const String homepage = '/homepage';
+  static const String profile = '/profile';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -20,13 +22,16 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => Register());
       case homepage:
         return MaterialPageRoute(builder: (_) => HomePage());
+      case profile:
+        return MaterialPageRoute(builder: (_) => Profile());
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('Route not found'),
-            ),
-          ),
+          builder: (_) =>
+              Scaffold(
+                body: Center(
+                  child: Text('Route not found'),
+                ),
+              ),
         );
     }
   }
