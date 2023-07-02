@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_books_api/google_books_api.dart';
+import 'bookInfo.dart';
 
 import '../screens/homepage.dart';
 import 'bookInfo.dart';
@@ -14,8 +15,25 @@ class SearchResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        navigate(context, '/bookeInfoPage', isRootNavigator: false,
-            arguments: {'id': "index.toString()"});
+        /*navigate(context, '/bookeInfoPage', isRootNavigator: false,
+            arguments: {'id': "index.toString()"});*/
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                BookDetailsPage(title: book.volumeInfo.title,
+                    authors: book.volumeInfo.authors.isNotEmpty
+                        ? book.volumeInfo.authors[0]
+                        : "No author found",
+                    description
+                        : book.volumeInfo != null &&
+                        book.volumeInfo.description.isNotEmpty
+                        ? book.volumeInfo.description
+                        : "No description found",
+                    image
+                    :  book.volumeInfo.imageLinks!["thumbnail"].toString()),
+          ),
+        );
       },
       child: Card(
         margin: EdgeInsets.only(top: 5, bottom: 5),
@@ -29,17 +47,15 @@ class SearchResult extends StatelessWidget {
                 child: Container(
                   color: Colors.grey[200],
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: GestureDetector(
-                    child: book.volumeInfo.imageLinks != null
-                        ? Image.network(
-                            book.volumeInfo.imageLinks!["thumbnail"].toString(),
-                            fit: BoxFit.fitHeight,
-                          )
-                        : Icon(
-                            Icons.image,
-                            size: 80,
-                            color: Colors.grey[400],
-                          ),
+                  child: book.volumeInfo.imageLinks != null
+                      ? Image.network(
+                    book.volumeInfo.imageLinks!["thumbnail"].toString(),
+                    fit: BoxFit.fitHeight,
+                  )
+                      : Icon(
+                    Icons.image,
+                    size: 80,
+                    color: Colors.grey[400],
                   ),
                 ),
               ),
@@ -53,12 +69,14 @@ class SearchResult extends StatelessWidget {
                     Text(
                       book.volumeInfo.title,
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      book.volumeInfo.authors[0],
+                      book.volumeInfo.authors.isNotEmpty
+                          ? book.volumeInfo.authors[0]
+                          : "No author found",
                       style: TextStyle(fontSize: 14),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
