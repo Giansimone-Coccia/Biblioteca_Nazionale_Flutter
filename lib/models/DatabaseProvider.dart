@@ -195,4 +195,20 @@ class DatabaseProvider {
     });
   }
 
+  Future<String?> getCurrentUserEmail(int userId) async {
+    final db = await database;
+    final result = await db.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [userId],
+      columns: ['email'],
+      limit: 1,
+    );
+    if (result.isNotEmpty) {
+      return result.first['email'] as String?;
+    }
+    return null;
+  }
+
+
 }
