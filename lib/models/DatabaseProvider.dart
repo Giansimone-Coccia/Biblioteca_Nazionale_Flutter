@@ -82,6 +82,46 @@ class DatabaseProvider {
     );
   }
 
+  Future<void> removeUser(int userId) async {
+    final db = await database;
+    await db.delete(
+      'users',
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+  }
+
+  Future<void> updateUserData(int userId, String newEmail, String newPassword) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {
+        'email': newEmail,
+        'password': newPassword,
+      },
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+  }
+
+  Future<Map<String, dynamic>> getUserDataByEmail(String email) async {
+    final db = await database;
+    final result = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+      limit: 1,
+    );
+    if (result.isNotEmpty) {
+      return result.first;
+    }
+    return {};
+  }
+
+  Future<List<Map<String, dynamic>>> getAllUserData() async {
+    final db = await database;
+    return db.query('users');
+  }
 
   Future<void> addBook(DBBook book) async {
     final db = await database;
