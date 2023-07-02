@@ -15,8 +15,6 @@ class _HomePageState extends State<HomePage> {
   List<Widget> _widgetOptions = [
     BookList(),
     MyBooks(),
-    Container(),
-    Container(),
     Profile(),
   ];
 
@@ -39,14 +37,6 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.book_rounded),
             label: 'Books',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.rate_review_rounded),
-            label: 'Review',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_rounded),
-            label: 'Notifications',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_rounded),
