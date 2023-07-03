@@ -1,5 +1,5 @@
 import 'package:bib_nazionale_flutter/models/dbbooks.dart';
-import 'package:bib_nazionale_flutter/screens/my_books.dart';
+import 'package:bib_nazionale_flutter/widgets/my_books.dart';
 import 'package:bib_nazionale_flutter/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_books_api/google_books_api.dart';

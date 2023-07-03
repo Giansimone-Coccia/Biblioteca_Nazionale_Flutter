@@ -67,7 +67,7 @@ flutter:
     - assets/images/logo_welcome.png
     - assets/images/best_home_library_apps.webp
     - assets/images/loginbkg.png
-    - assets/images/
+    - assets/images/libraryBanner1.svg
 
 
   # The following line ensures that the Material Icons font is

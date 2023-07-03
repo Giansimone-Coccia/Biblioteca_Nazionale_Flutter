@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../models/DatabaseProvider.dart';
 import '../models/dbbooks.dart';
-import '../widgets/bookDelete.dart';
+import 'bookDelete.dart';
 
 DatabaseProvider _databaseProvider = DatabaseProvider();
 
@@ -83,17 +84,40 @@ class _MyBooksState extends State<MyBooks> with WidgetsBindingObserver {
         onRefresh: refreshBooks,
         child: Consumer<BooksProvider>(
           builder: (context, booksProvider, _) {
-            return ListView.builder(
-              itemCount: booksProvider.books.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    _navigateToBookDeletePage(booksProvider.books[index]);
-                  },
-                  child: BookItem(book: booksProvider.books[index]),
-                );
-              },
-            );
+            if (booksProvider.books.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/images/libraryBanner1.svg',
+                      width: 250,
+                      height: 250,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'No books found',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: booksProvider.books.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      _navigateToBookDeletePage(
+                          booksProvider.books[index], context);
+                    },
+                    child: BookItem(book: booksProvider.books[index]),
+                  );
+                },
+              );
+            }
           },
         ),
       ),

@@ -1,4 +1,4 @@
-import 'package:bib_nazionale_flutter/screens/my_books.dart';
+import 'package:bib_nazionale_flutter/widgets/my_books.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'routes/routes.dart';
