@@ -15,8 +15,15 @@ class _BookListState extends State<BookList> {
   GoogleApi googleApi = GoogleApi();
   List<Book> bookList = [];
   bool showWelcomeSection = true;
+  GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
 
-  void updateSearchQuery(String query) async {
+  @override
+  void initState() {
+    super.initState();
+    updateSearchQuery('');
+  }
+
+  Future<void> updateSearchQuery(String query) async {
     setState(() {
       searchQuery = query;
     });
@@ -30,50 +37,50 @@ class _BookListState extends State<BookList> {
     }
   }
 
+  Route _generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(
+          builder: (BuildContext context) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: CustomAppBarSearch(onSearchChanged: updateSearchQuery),
+            body: Center(
+              child: showWelcomeSection
+                  ? WelcomeSection()
+                  : BookListView(books: bookList),
+            ),
+          ),
+        );
+      case '/bookInfoPage':
+        return MaterialPageRoute(
+          builder: (BuildContext context) => BookDetailsPage(
+            title: '',
+            authors: '',
+            description: '',
+            image: '',
+          ),
+        );
+      default:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: CustomAppBarSearch(onSearchChanged: updateSearchQuery),
+            body: Center(
+              child: showWelcomeSection
+                  ? WelcomeSection()
+                  : BookListView(books: bookList),
+            ),
+          ),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
-
     return Navigator(
       key: homeKey,
       initialRoute: '/homepage',
-      onGenerateRoute: (settings) {
-        WidgetBuilder builder;
-        switch (settings.name) {
-          case '/':
-            builder = (BuildContext _) => Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  appBar:
-                      CustomAppBarSearch(onSearchChanged: updateSearchQuery),
-                  body: Center(
-                    child: showWelcomeSection
-                        ? WelcomeSection()
-                        : BookListView(books: bookList),
-                  ),
-                );
-            break;
-          case '/bookeInfoPage':
-            builder = (BuildContext _) => BookDetailsPage(
-                  title: '',
-                  authors: '',
-                  description: '',
-                  image: '',
-                );
-            break;
-          default:
-            builder = (BuildContext _) => Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  appBar:
-                      CustomAppBarSearch(onSearchChanged: updateSearchQuery),
-                  body: Center(
-                    child: showWelcomeSection
-                        ? WelcomeSection()
-                        : BookListView(books: bookList),
-                  ),
-                );
-        }
-        return MaterialPageRoute(builder: builder, settings: settings);
-      },
+      onGenerateRoute: _generateRoute,
     );
   }
 }

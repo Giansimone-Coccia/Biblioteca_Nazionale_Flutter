@@ -58,171 +58,136 @@ class _MyBooksState extends State<MyBooks> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
-
     return Navigator(
-        key: homeKey,
-        initialRoute: '/myBooks',
-        onGenerateRoute: (settings) {
-          WidgetBuilder builder;
-          switch (settings.name) {
-            case '/':
-              builder = (BuildContext _) => Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        "My Books",
-                        style: TextStyle(
-                          color: customPurpleColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      centerTitle: true,
-                      backgroundColor: Colors.white,
-                      elevation: 0,
-                      bottom: PreferredSize(
-                        child: Container(
-                          color: customPurpleColor,
-                          height: 2.0,
-                        ),
-                        preferredSize: Size.fromHeight(2.0),
-                      ),
-                      automaticallyImplyLeading: false,
-                    ),
-                    body: RefreshIndicator(
-                      onRefresh: refreshBooks,
-                      child: Consumer<BooksProvider>(
-                        builder: (context, booksProvider, _) {
-                          if (booksProvider.books.isEmpty) {
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/libraryBanner1.svg',
-                                    width: 250,
-                                    height: 250,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'No books found',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return ListView.builder(
-                              itemCount: booksProvider.books.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    _navigateToBookDeletePage(
-                                        booksProvider.books[index], context);
-                                  },
-                                  child: BookItem(
-                                      book: booksProvider.books[index]),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    floatingActionButton: FloatingActionButton(
-                      onPressed: refreshBooks,
-                      child: Icon(Icons.refresh),
-                      backgroundColor: customPurpleColor,
-                    ),
-                  );
-              break;
-            case '/deleteBooks':
-              builder = (BuildContext _) => BookDeletePage(
-                    book: DBBook(
-                        id: 1,
-                        title: '',
-                        authors: '',
-                        description: '',
-                        image: ''),
-                  );
-              break;
-            default:
-              builder = (BuildContext _) => Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        "My Books",
-                        style: TextStyle(
-                          color: customPurpleColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      centerTitle: true,
-                      backgroundColor: Colors.white,
-                      elevation: 0,
-                      bottom: PreferredSize(
-                        child: Container(
-                          color: customPurpleColor,
-                          height: 2.0,
-                        ),
-                        preferredSize: Size.fromHeight(2.0),
-                      ),
-                      automaticallyImplyLeading: false,
-                    ),
-                    body: RefreshIndicator(
-                      onRefresh: refreshBooks,
-                      child: Consumer<BooksProvider>(
-                        builder: (context, booksProvider, _) {
-                          if (booksProvider.books.isEmpty) {
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/libraryBanner1.svg',
-                                    width: 250,
-                                    height: 250,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'No books found',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
-                            return ListView.builder(
-                              itemCount: booksProvider.books.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    _navigateToBookDeletePage(
-                                        booksProvider.books[index], context);
-                                  },
-                                  child: BookItem(
-                                      book: booksProvider.books[index]),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    floatingActionButton: FloatingActionButton(
-                      onPressed: refreshBooks,
-                      child: Icon(Icons.refresh),
-                      backgroundColor: customPurpleColor,
-                    ),
-                  );
-          }
-          return MaterialPageRoute(builder: builder, settings: settings);
-        });
+      key: GlobalKey<NavigatorState>(),
+      initialRoute: '/myBooks',
+      onGenerateRoute: (settings) => generateRoute(settings),
+    );
   }
+
+  MaterialPageRoute generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(
+          builder: (BuildContext _) => buildMyBooksPage(),
+          settings: settings,
+        );
+      case '/deleteBooks':
+        return MaterialPageRoute(
+          builder: (BuildContext _) => buildBookDeletePage(),
+          settings: settings,
+        );
+      default:
+        return MaterialPageRoute(
+          builder: (BuildContext _) => buildMyBooksPage(),
+          settings: settings,
+        );
+    }
+  }
+
+  Scaffold buildMyBooksPage() {
+    return Scaffold(
+      appBar: buildAppBar(),
+      body: buildBooksList(),
+      floatingActionButton: buildRefreshButton(),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: Text(
+        "My Books",
+        style: TextStyle(
+          color: customPurpleColor,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      centerTitle: true,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      bottom: PreferredSize(
+        child: Container(
+          color: customPurpleColor,
+          height: 2.0,
+        ),
+        preferredSize: Size.fromHeight(2.0),
+      ),
+      automaticallyImplyLeading: false,
+    );
+  }
+
+  RefreshIndicator buildBooksList() {
+    return RefreshIndicator(
+      onRefresh: refreshBooks,
+      child: Consumer<BooksProvider>(
+        builder: (context, booksProvider, _) {
+          if (booksProvider.books.isEmpty) {
+            return buildEmptyBooksList();
+          } else {
+            return buildBooksListView(booksProvider);
+          }
+        },
+      ),
+    );
+  }
+
+  Center buildEmptyBooksList() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/images/libraryBanner1.svg',
+            width: 250,
+            height: 250,
+          ),
+          SizedBox(height: 8),
+          Text(
+            'No books found',
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ListView buildBooksListView(BooksProvider booksProvider) {
+    return ListView.builder(
+      itemCount: booksProvider.books.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            _navigateToBookDeletePage(booksProvider.books[index], context);
+          },
+          child: BookItem(book: booksProvider.books[index]),
+        );
+      },
+    );
+  }
+
+  FloatingActionButton buildRefreshButton() {
+    return FloatingActionButton(
+      onPressed: refreshBooks,
+      child: Icon(Icons.refresh),
+      backgroundColor: customPurpleColor,
+    );
+  }
+
+  BookDeletePage buildBookDeletePage() {
+    return BookDeletePage(
+      book: DBBook(
+        id: 1,
+        title: '',
+        authors: '',
+        description: '',
+        image: '',
+      ),
+    );
+  }
+
 }
 
 void _navigateToBookDeletePage(DBBook book, BuildContext context) {
