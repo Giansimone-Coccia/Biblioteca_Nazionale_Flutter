@@ -15,7 +15,18 @@ class BookDeletePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: customPurpleColor,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: BackButton(
+          color: customPurpleColor,
+        ),
+        bottom: PreferredSize(
+          child: Container(
+            color: customPurpleColor,
+            height: 2.0,
+          ),
+          preferredSize: Size.fromHeight(1.0),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -53,17 +64,18 @@ class BookHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.network(
           image,
           width: double.infinity,
           height: 200,
-          fit: BoxFit.cover,
+          fit: BoxFit.fitHeight,
         ),
         SizedBox(height: 16.0),
         Text(
           title,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 24.0,
             fontWeight: FontWeight.bold,
@@ -72,26 +84,13 @@ class BookHeader extends StatelessWidget {
         SizedBox(height: 8.0),
         Text(
           authors,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18.0,
             color: Colors.grey,
           ),
         ),
       ],
-    );
-  }
-}
-
-class BookInfo extends StatelessWidget {
-  final String description;
-
-  const BookInfo({required this.description});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      description,
-      style: TextStyle(fontSize: 16.0),
     );
   }
 }
@@ -110,7 +109,8 @@ class DeleteBookButton extends StatelessWidget {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Confirmation'),
-              content: Text('Are you sure to remove the book from the booked list?'),
+              content:
+                  Text('Are you sure to remove the book from the booked list?'),
               actions: <Widget>[
                 TextButton(
                   child: Text('No'),
@@ -152,5 +152,3 @@ class DeleteBookButton extends StatelessWidget {
     Navigator.of(context).pop(); // Torna alla schermata precedente (MyBooks)
   }
 }
-
-
