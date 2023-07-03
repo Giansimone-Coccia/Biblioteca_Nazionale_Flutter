@@ -91,7 +91,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Warining'),
+                                title: Text('Warning'),
                                 content: Text(
                                     'Email already present in the database'),
                                 actions: [
