@@ -5,12 +5,12 @@ import '../models/auth_manager.dart';
 
 final Color customPurpleColor = const Color(0xFF6D77FB);
 
-DatabaseProvider databaseProvider = DatabaseProvider();
-
 class Profile extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final DatabaseProvider databaseProvider = DatabaseProvider();
+  final AuthManager auth = AuthManager();
 
   @override
   Widget build(BuildContext context) {
@@ -75,37 +75,51 @@ class Profile extends StatelessWidget {
   }
 
   Widget buildHeader() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(height: 5),
-        Text(
-          "Email",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 28,
-          ),
-        ),
-        SizedBox(height: 40),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
+    return FutureBuilder<String?>(
+      future: databaseProvider.getCurrentUserEmail(auth.currentUserId!.toInt()),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (snapshot.hasData) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 5),
               Text(
-                "Modify your profile",
+                snapshot.data!,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 28,
                 ),
-                textAlign: TextAlign.center,
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 40),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Text(
+                      "Modify your profile",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 15),
+                  ],
+                ),
+              ),
             ],
-          ),
-        ),
-      ],
+          );
+        } else {
+          return Text('No data');
+        }
+      },
     );
   }
+
 
   Widget buildForm(BuildContext context) {
     return Column(
