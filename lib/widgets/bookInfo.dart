@@ -45,7 +45,6 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
   Future<void> _loadData() async {
     await getLibrary(widget.title);
-    addMarkersToMap();
   }
 
   @override
@@ -79,67 +78,72 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
               BookInfo(description: widget.description),
               SizedBox(height: 16.0),
               Container(
-                height: 200.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: GoogleMap(
-                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                      new Factory<OneSequenceGestureRecognizer>(
-                            () => new EagerGestureRecognizer(),
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
-                    ].toSet(),
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(41.87194, 12.56738),
-                      zoom: 5,
-                    ),
-                    markers: Set<Marker>.from(markerList),
+                    ],
                   ),
-                ) // Indicatore di caricamento
-              ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: GoogleMap(
+                      gestureRecognizers:
+                          <Factory<OneSequenceGestureRecognizer>>[
+                        new Factory<OneSequenceGestureRecognizer>(
+                          () => new EagerGestureRecognizer(),
+                        ),
+                      ].toSet(),
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(41.87194, 12.56738),
+                        zoom: 5,
+                      ),
+                      markers: Set<Marker>.from(markerList),
+                    ),
+                  ) // Indicatore di caricamento
+                  ),
               SizedBox(height: 16.0),
               Text(library),
               SizedBox(height: 16.0),
-              RequestBookButton(
-                onPressed: () async {
-                  DBBook book = DBBook(
-                    title: widget.title,
-                    authors: widget.authors,
-                    image: widget.image,
-                    description: widget.description,
-                    library: library,
-                  );
-                  try {
-                    bool bookExists = await _databaseProvider.checkBookExists(book);
-                    if (bookExists) {
-                      setState(() {
-                        _bookExists = true;
-                        _message = 'Book already exists!';
-                      });
-                    } else {
-                      await _databaseProvider.addBook(book);
-                      setState(() {
-                        _bookExists = false;
-                        _message = 'Book successfully requested!';
-                      });
-                    }
-                  } catch (e) {
-                    setState(() {
-                      _message = 'Failed to request book. Please try again.';
-                    });
-                  }
-                },
-              ),
+              library == ""
+                  ? RequestBookButton(onPressed: () async {})
+                  : RequestBookButton(
+                      onPressed: () async {
+                        DBBook book = DBBook(
+                          title: widget.title,
+                          authors: widget.authors,
+                          image: widget.image,
+                          description: widget.description,
+                          library: library,
+                        );
+                        try {
+                          bool bookExists =
+                              await _databaseProvider.checkBookExists(book);
+                          if (bookExists) {
+                            setState(() {
+                              _bookExists = true;
+                              _message = 'Book already exists!';
+                            });
+                          } else {
+                            await _databaseProvider.addBook(book);
+                            setState(() {
+                              _bookExists = false;
+                              _message = 'Book successfully requested!';
+                            });
+                          }
+                        } catch (e) {
+                          setState(() {
+                            _message =
+                                'Failed to request book. Please try again.';
+                          });
+                        }
+                      },
+                    ),
               SizedBox(height: 16.0),
               // Resto del codice...
             ],
@@ -161,7 +165,8 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
         List<String> shelfmarksMulti = shelfmarks.toList();
 
         for (String libraryName in shelfmarks) {
-          final apiKey = 'AIzaSyCtTj2ohggFHtNX2asYNXL1kj31pO8wO_Y'; // Sostituisci con la tua chiave API
+          final apiKey =
+              'AIzaSyCtTj2ohggFHtNX2asYNXL1kj31pO8wO_Y'; // Sostituisci con la tua chiave API
           final encodedLibraryName = Uri.encodeQueryComponent(libraryName);
           final url =
               'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedLibraryName&key=$apiKey';
@@ -196,7 +201,6 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
             }
           }
         }
-
         setState(() {
           completeList = shelfmarksMulti;
           _bookExists = true;
@@ -206,12 +210,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
     }
     return [];
   }
-
-  void addMarkersToMap() async {
-
-  }
 }
-
 
 class BookHeader extends StatelessWidget {
   final String image;
