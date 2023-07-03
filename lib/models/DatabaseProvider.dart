@@ -209,6 +209,4 @@ class DatabaseProvider {
     }
     return null;
   }
-
-
 }
