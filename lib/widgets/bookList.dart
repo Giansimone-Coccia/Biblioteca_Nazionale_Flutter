@@ -42,31 +42,40 @@ class _BookListState extends State<BookList> {
         switch (settings.name) {
           case '/':
             builder = (BuildContext _) => Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: CustomAppBarSearch(onSearchChanged: updateSearchQuery),
-              body: Column(
-                children: [
-                  if (showWelcomeSection)
-                    Expanded(child: WelcomeSection()),
-                  Expanded(child: BookListView(books: bookList)),
-                ],
-              ),
-            );
+                  resizeToAvoidBottomInset: false,
+                  appBar:
+                      CustomAppBarSearch(onSearchChanged: updateSearchQuery),
+                  body: Center(
+                    child: Column(
+                      children: [
+                        if (showWelcomeSection)
+                          Expanded(child: WelcomeSection()),
+                        Expanded(child: BookListView(books: bookList)),
+                      ],
+                    ),
+                  ),
+                );
             break;
           case '/bookeInfoPage':
-            builder = (BuildContext _) => BookDetailsPage(title: '', authors: '', description: '', image: '',);
+            builder = (BuildContext _) => BookDetailsPage(
+                  title: '',
+                  authors: '',
+                  description: '',
+                  image: '',
+                );
             break;
-          default:builder = (BuildContext _) => Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: CustomAppBarSearch(onSearchChanged: updateSearchQuery),
-            body: Column(
-              children: [
-                if (showWelcomeSection)
-                  Expanded(child: WelcomeSection()),
-                Expanded(child: BookListView(books: bookList)),
-              ],
-            ),
-          );
+          default:
+            builder = (BuildContext _) => Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  appBar:
+                      CustomAppBarSearch(onSearchChanged: updateSearchQuery),
+                  body: Column(
+                    children: [
+                      if (showWelcomeSection) Expanded(child: WelcomeSection()),
+                      Expanded(child: BookListView(books: bookList)),
+                    ],
+                  ),
+                );
         }
         return MaterialPageRoute(builder: builder, settings: settings);
       },
@@ -75,13 +84,14 @@ class _BookListState extends State<BookList> {
 }
 
 Future<void> navigate(BuildContext context, String route,
-    {bool isDialog = false,
-      bool isRootNavigator = true,
-      Map<String, dynamic>? arguments}) =>
+        {bool isDialog = false,
+        bool isRootNavigator = true,
+        Map<String, dynamic>? arguments}) =>
     Navigator.of(context, rootNavigator: isRootNavigator)
         .pushNamed(route, arguments: arguments);
 
-class CustomAppBarSearch extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarSearch extends StatelessWidget
+    implements PreferredSizeWidget {
   final Function(String) onSearchChanged;
 
   CustomAppBarSearch({required this.onSearchChanged});
