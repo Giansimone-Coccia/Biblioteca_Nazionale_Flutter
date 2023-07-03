@@ -46,13 +46,9 @@ class _BookListState extends State<BookList> {
                   appBar:
                       CustomAppBarSearch(onSearchChanged: updateSearchQuery),
                   body: Center(
-                    child: Column(
-                      children: [
-                        if (showWelcomeSection)
-                          Expanded(child: WelcomeSection()),
-                        Expanded(child: BookListView(books: bookList)),
-                      ],
-                    ),
+                    child: showWelcomeSection
+                        ? WelcomeSection()
+                        : BookListView(books: bookList),
                   ),
                 );
             break;
@@ -69,11 +65,10 @@ class _BookListState extends State<BookList> {
                   resizeToAvoidBottomInset: false,
                   appBar:
                       CustomAppBarSearch(onSearchChanged: updateSearchQuery),
-                  body: Column(
-                    children: [
-                      if (showWelcomeSection) Expanded(child: WelcomeSection()),
-                      Expanded(child: BookListView(books: bookList)),
-                    ],
+                  body: Center(
+                    child: showWelcomeSection
+                        ? WelcomeSection()
+                        : BookListView(books: bookList),
                   ),
                 );
         }
@@ -181,28 +176,21 @@ class _SearchViewState extends State<SearchView> {
 class WelcomeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      reverse: true,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/images/best_home_library_apps.webp',
-            height: 250,
-            fit: BoxFit.fitHeight,
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Center(
-              child: Text(
-                'Welcome to the app of\nBiblioteca Nazionale',
-                style: TextStyle(fontSize: 24),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          'assets/images/best_home_library_apps.webp',
+          height: 250,
+          width: 250,
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Welcome to the app of\nBiblioteca Nazionale',
+          style: TextStyle(fontSize: 24),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }
