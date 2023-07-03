@@ -41,6 +41,15 @@ class BookDeletePage extends StatelessWidget {
               SizedBox(height: 16.0),
               BookInfo(description: book.description),
               SizedBox(height: 16.0),
+              Text(
+                book.library,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 16.0),
               DeleteBookButton(book: book),
             ],
           ),
