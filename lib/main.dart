@@ -5,7 +5,6 @@ import 'routes/routes.dart';
 
 final GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
 
-
 void main() {
   runApp(
     MultiProvider(

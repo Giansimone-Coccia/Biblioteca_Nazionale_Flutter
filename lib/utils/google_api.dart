@@ -20,6 +20,4 @@ class GoogleApi{
         Book books = await GoogleBooksApi().getBookById(idBook);
         return books;
     }
-
-
 }

@@ -1,8 +1,9 @@
-import 'package:bib_nazionale_flutter/widgets/bookList.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-import '../models/DatabaseProvider.dart';
-import '../models/dbbooks.dart';
+import '../utils/library_api.dart';
+import '../utils/search_api.dart';
 
 final Color customPurpleColor = const Color(0xFF6D77FB);
 
@@ -24,9 +25,14 @@ class BookDetailsPage extends StatefulWidget {
 }
 
 class _BookDetailsPageState extends State<BookDetailsPage> {
-  DatabaseProvider _databaseProvider = DatabaseProvider();
-  String _message = '';
+  List<String> completeList = [];
   bool _bookExists = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getLibrary(widget.title);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,48 +64,35 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
               SizedBox(height: 16.0),
               BookInfo(description: widget.description),
               SizedBox(height: 16.0),
-            RequestBookButton(
-              onPressed: () async {
-                DBBook book = DBBook(
-                  title: widget.title,
-                  authors: widget.authors,
-                  image: widget.image,
-                  description: widget.description,
-                );
-                try {
-                  bool bookExists = await _databaseProvider.checkBookExists(book);
-                  if (bookExists) {
-                    setState(() {
-                      _bookExists = true;
-                      _message = 'Book already exists!';
-                    });
-                  } else {
-                    await _databaseProvider.addBook(book);
-                    setState(() {
-                      _bookExists = false;
-                      _message = 'Book successfully requested!';
-                    });
-                  }
-                } catch (e) {
-                  setState(() {
-                    _message = 'Failed to request book. Please try again.';
-                  });
-                }
-              },
-            ),
+              DropdownMenu(dropdownItems: completeList),
               SizedBox(height: 16.0),
-              Text(
-                _message,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: _message.startsWith('Failed') ? Colors.red : Colors.green,
-                ),
+              RequestBookButton(
+                onPressed: () async {
+                  // Resto del codice...
+                },
               ),
+              SizedBox(height: 16.0),
+              // Resto del codice...
             ],
           ),
         ),
       ),
     );
+  }
+
+  void getLibrary(String bookName) async {
+    final searchApi = SearchApi();
+    final bookId = await searchApi.getBookId(bookName);
+    if (bookId != null) {
+      final libraryApi = LibraryApi();
+      final shelfmarks = await libraryApi.getShelfmarks(bookId);
+      if (shelfmarks != null && shelfmarks.isNotEmpty) {
+        setState(() {
+          completeList = shelfmarks;
+          _bookExists = true;
+        });
+      }
+    }
   }
 }
 
@@ -116,36 +109,38 @@ class BookHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.network(
-              image,
-              width: 200.0,
-              height: 300.0,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(height: 16.0),
-            Center(
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(height: 8.0),
-            Center(
-              child: Text(
-                authors,
-                style: TextStyle(fontSize: 18.0),
-              ),
-            ),
-          ],
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.network(
+          image,
+          width: 120.0,
+          height: 160.0,
         ),
-      ),
+        SizedBox(width: 16.0),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                authors,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -238,6 +233,56 @@ class _BookInfoState extends State<BookInfo> {
   }
 }
 
+class DropdownMenu extends StatefulWidget {
+  final List<String> dropdownItems;
+
+  DropdownMenu({required this.dropdownItems});
+
+  @override
+  _DropdownMenuState createState() => _DropdownMenuState();
+}
+
+class _DropdownMenuState extends State<DropdownMenu> {
+  String? _selectedItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Available in libraries:',
+          style: TextStyle(fontSize: 16.0),
+        ),
+        SizedBox(height: 8.0),
+        DropdownButtonFormField<String>(
+          value: _selectedItem,
+          items: widget.dropdownItems.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _selectedItem = value;
+            });
+          },
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[200],
+            contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class RequestBookButton extends StatelessWidget {
   final VoidCallback onPressed;
 
@@ -258,22 +303,6 @@ class RequestBookButton extends StatelessWidget {
         child: Text(
           'Request Book',
           style: TextStyle(fontSize: 18.0),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomMapView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200.0,
-      color: Colors.grey,
-      child: Center(
-        child: Text(
-          'Map View',
-          style: TextStyle(fontSize: 18.0, color: Colors.white),
         ),
       ),
     );
