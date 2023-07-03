@@ -157,7 +157,7 @@ class DeleteBookButton extends StatelessWidget {
   Future<void> _deleteBook(BuildContext context) async {
     await DatabaseProvider().deleteBook(book.id!);
 
-    Navigator.of(context).pop(); // Chiude lo screen di eliminazione del libro
-    Navigator.of(context).pop(); // Torna alla schermata precedente (MyBooks)
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 }
