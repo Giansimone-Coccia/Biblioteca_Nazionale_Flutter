@@ -5,12 +5,32 @@ import '../models/auth_manager.dart';
 
 final Color customPurpleColor = const Color(0xFF6D77FB);
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final DatabaseProvider databaseProvider = DatabaseProvider();
   final AuthManager auth = AuthManager();
+
+  String? currentEmail;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCurrentEmail();
+  }
+
+  void fetchCurrentEmail() async {
+    String? email = await databaseProvider.getCurrentUserEmail(auth.currentUserId!.toInt());
+    setState(() {
+      currentEmail = email;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,48 +95,35 @@ class Profile extends StatelessWidget {
   }
 
   Widget buildHeader() {
-    return FutureBuilder<String?>(
-      future: databaseProvider.getCurrentUserEmail(auth.currentUserId!.toInt()),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 5),
+        Text(
+          currentEmail ?? '',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+          ),
+        ),
+        SizedBox(height: 40),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
             children: [
-              SizedBox(height: 5),
               Text(
-                snapshot.data!,
+                "Modify your profile",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 28,
+                  fontSize: 24,
                 ),
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: 40),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    Text(
-                      "Modify your profile",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 15),
-                  ],
-                ),
-              ),
+              SizedBox(height: 15),
             ],
-          );
-        } else {
-          return Text('No data');
-        }
-      },
+          ),
+        ),
+      ],
     );
   }
 
@@ -288,8 +295,8 @@ class Profile extends StatelessWidget {
             TextButton(
               child: Text('Delete'),
               onPressed: () {
-                // Esegui l'azione di eliminazione del profilo
-                deleteProfile(context);
+                // Logica per eliminare il profilo
+                Navigator.pushReplacementNamed(context, '/login');
               },
             ),
           ],
@@ -352,9 +359,35 @@ class Profile extends StatelessWidget {
         return;
       }
 
-      if (newEmail.isNotEmpty) {
-        databaseProvider.updateUserEmail(currentUserId, newEmail);
+      if (newEmail.isEmpty && newPassword.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('No changes to update.'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return;
       }
+
+      if (newEmail.isNotEmpty) {
+        databaseProvider.updateUserEmail(auth.currentUserId!.toInt(), newEmail).then((_) {
+          setState(() {
+            currentEmail = newEmail;
+          });
+        });
+      }
+
 
       if (newPassword.isNotEmpty) {
         databaseProvider.updateUserPassword(currentUserId, newPassword);
