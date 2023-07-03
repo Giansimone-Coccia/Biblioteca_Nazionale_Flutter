@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
+import '../models/DatabaseProvider.dart';
+import '../models/dbbooks.dart';
 import '../utils/library_api.dart';
 import '../utils/search_api.dart';
 
@@ -30,7 +32,10 @@ class BookDetailsPage extends StatefulWidget {
 class _BookDetailsPageState extends State<BookDetailsPage> {
   List<String> completeList = [];
   List<Marker> markerList = [];
+  String library = "";
+  String _message = '';
   bool _bookExists = false;
+  DatabaseProvider _databaseProvider = DatabaseProvider();
 
   @override
   void initState() {
@@ -103,9 +108,35 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                 ) // Indicatore di caricamento
               ),
               SizedBox(height: 16.0),
+              Text(library),
+              SizedBox(height: 16.0),
               RequestBookButton(
                 onPressed: () async {
-                  
+                  DBBook book = DBBook(
+                    title: widget.title,
+                    authors: widget.authors,
+                    image: widget.image,
+                    description: widget.description,
+                  );
+                  try {
+                    bool bookExists = await _databaseProvider.checkBookExists(book);
+                    if (bookExists) {
+                      setState(() {
+                        _bookExists = true;
+                        _message = 'Book already exists!';
+                      });
+                    } else {
+                      await _databaseProvider.addBook(book);
+                      setState(() {
+                        _bookExists = false;
+                        _message = 'Book successfully requested!';
+                      });
+                    }
+                  } catch (e) {
+                    setState(() {
+                      _message = 'Failed to request book. Please try again.';
+                    });
+                  }
                 },
               ),
               SizedBox(height: 16.0),
@@ -149,6 +180,11 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                     Marker(
                       markerId: MarkerId(libraryName),
                       position: LatLng(latitude, longitude),
+                      onTap: () {
+                        setState(() {
+                          library = libraryName;
+                        });
+                      },
                       infoWindow: InfoWindow(
                         title: libraryName,
                       ),
