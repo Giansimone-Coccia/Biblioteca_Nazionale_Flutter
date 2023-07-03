@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import '../models/DatabaseProvider.dart';
 import '../models/dbbooks.dart';
@@ -11,18 +12,47 @@ class MyBooks extends StatefulWidget {
   _MyBooksState createState() => _MyBooksState();
 }
 
-class _MyBooksState extends State<MyBooks> {
+class _MyBooksState extends State<MyBooks> with WidgetsBindingObserver {
   late BooksProvider _booksProvider;
+  bool _hasFocus = false;
 
   @override
   void initState() {
     super.initState();
     _booksProvider = Provider.of<BooksProvider>(context, listen: false);
+    _booksProvider.addListener(updateBooks);
     fetchBooks();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    _booksProvider.removeListener(updateBooks);
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  void updateBooks() {
+    if (_hasFocus) {
+      setState(() {});
+    }
   }
 
   Future<void> fetchBooks() async {
     await _booksProvider.fetchBooks();
+  }
+
+  Future<void> refreshBooks() async {
+    await _booksProvider.fetchBooks();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    _hasFocus = state == AppLifecycleState.resumed;
+    if (_hasFocus) {
+      refreshBooks();
+    }
   }
 
   @override
@@ -49,20 +79,28 @@ class _MyBooksState extends State<MyBooks> {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: Consumer<BooksProvider>(
-        builder: (context, booksProvider, _) {
-          return ListView.builder(
-            itemCount: booksProvider.books.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  _navigateToBookDeletePage(booksProvider.books[index]);
-                },
-                child: BookItem(book: booksProvider.books[index]),
-              );
-            },
-          );
-        },
+      body: RefreshIndicator(
+        onRefresh: refreshBooks,
+        child: Consumer<BooksProvider>(
+          builder: (context, booksProvider, _) {
+            return ListView.builder(
+              itemCount: booksProvider.books.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    _navigateToBookDeletePage(booksProvider.books[index]);
+                  },
+                  child: BookItem(book: booksProvider.books[index]),
+                );
+              },
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: refreshBooks,
+        child: Icon(Icons.refresh),
+        backgroundColor: customPurpleColor,
       ),
     );
   }
@@ -154,4 +192,3 @@ class BooksProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
