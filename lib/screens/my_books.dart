@@ -27,47 +27,112 @@ class _MyBooksState extends State<MyBooks> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "My Books",
-          style: TextStyle(
-            color: customPurpleColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        bottom: PreferredSize(
-          child: Container(
-            color: customPurpleColor,
-            height: 2.0,
-          ),
-          preferredSize: Size.fromHeight(2.0),
-        ),
-        automaticallyImplyLeading: false,
-      ),
-      body: Consumer<BooksProvider>(
-        builder: (context, booksProvider, _) {
-          return ListView.builder(
-            itemCount: booksProvider.books.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  _navigateToBookDeletePage(booksProvider.books[index]);
-                },
-                child: BookItem(book: booksProvider.books[index]),
-              );
-            },
-          );
-        },
-      ),
-    );
+    GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
+
+    return Navigator(
+        key: homeKey,
+        initialRoute: '/myBooks',
+        onGenerateRoute: (settings) {
+          WidgetBuilder builder;
+          switch (settings.name) {
+            case '/':
+              builder = (BuildContext _) => Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        "My Books",
+                        style: TextStyle(
+                          color: customPurpleColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      centerTitle: true,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      bottom: PreferredSize(
+                        child: Container(
+                          color: customPurpleColor,
+                          height: 2.0,
+                        ),
+                        preferredSize: Size.fromHeight(2.0),
+                      ),
+                      automaticallyImplyLeading: false,
+                    ),
+                    body: Consumer<BooksProvider>(
+                      builder: (context, booksProvider, _) {
+                        return ListView.builder(
+                          itemCount: booksProvider.books.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                _navigateToBookDeletePage(
+                                    booksProvider.books[index],context);
+                              },
+                              child: BookItem(book: booksProvider.books[index]),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+              break;
+            case '/deleteBooks':
+              builder = (BuildContext _) => BookDeletePage(
+                    book: DBBook(
+                        id: 1,
+                        title: '',
+                        authors: '',
+                        description: '',
+                        image: ''),
+                  );
+              break;
+            default:
+              builder = (BuildContext _) => Scaffold(
+                    appBar: AppBar(
+                      title: Text(
+                        "My Books",
+                        style: TextStyle(
+                          color: customPurpleColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      centerTitle: true,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      bottom: PreferredSize(
+                        child: Container(
+                          color: customPurpleColor,
+                          height: 2.0,
+                        ),
+                        preferredSize: Size.fromHeight(2.0),
+                      ),
+                      automaticallyImplyLeading: false,
+                    ),
+                    body: Consumer<BooksProvider>(
+                      builder: (context, booksProvider, _) {
+                        return ListView.builder(
+                          itemCount: booksProvider.books.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                _navigateToBookDeletePage(
+                                    booksProvider.books[index],context);
+                              },
+                              child: BookItem(book: booksProvider.books[index]),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+          }
+          return MaterialPageRoute(builder: builder, settings: settings);
+
+        });
   }
 
-  void _navigateToBookDeletePage(DBBook book) {
+  void _navigateToBookDeletePage(DBBook book, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -154,4 +219,3 @@ class BooksProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

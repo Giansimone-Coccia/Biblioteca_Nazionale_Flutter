@@ -13,50 +13,39 @@ class BookDeletePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
-
-    return Navigator(
-      key: homeKey,
-      initialRoute: '/deleteBooks',
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (context) => Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: BackButton(
-                color: customPurpleColor,
-              ),
-              bottom: PreferredSize(
-                child: Container(
-                  color: customPurpleColor,
-                  height: 2.0,
-                ),
-                preferredSize: Size.fromHeight(1.0),
-              ),
-            ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    BookHeader(
-                      image: book.image,
-                      title: book.title,
-                      authors: book.authors,
-                    ),
-                    SizedBox(height: 16.0),
-                    BookInfo(description: book.description),
-                    SizedBox(height: 16.0),
-                    DeleteBookButton(book: book),
-                  ],
-                ),
-              ),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: BackButton(
+          color: customPurpleColor,
+        ),
+        bottom: PreferredSize(
+          child: Container(
+            color: customPurpleColor,
+            height: 2.0,
           ),
-        );
-      },
+          preferredSize: Size.fromHeight(1.0),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              BookHeader(
+                image: book.image,
+                title: book.title,
+                authors: book.authors,
+              ),
+              SizedBox(height: 16.0),
+              BookInfo(description: book.description),
+              SizedBox(height: 16.0),
+              DeleteBookButton(book: book),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -120,7 +109,8 @@ class DeleteBookButton extends StatelessWidget {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Confirmation'),
-              content: Text('Are you sure to remove the book from the booked list?'),
+              content:
+                  Text('Are you sure to remove the book from the booked list?'),
               actions: <Widget>[
                 TextButton(
                   child: Text('No'),
