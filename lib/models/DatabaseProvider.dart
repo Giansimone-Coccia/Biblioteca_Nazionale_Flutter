@@ -44,7 +44,8 @@ class DatabaseProvider {
             title TEXT NOT NULL,
             authors TEXT NOT NULL,
             image TEXT,
-            description TEXT
+            description TEXT,
+            library TEXT
           )
         ''');
       },
@@ -165,8 +166,8 @@ class DatabaseProvider {
     final db = await database;
     final List<Map<String, dynamic>> existingBooks = await db.query(
       'books',
-      where: 'authors = ? AND title = ? AND description = ?',
-      whereArgs: [book.authors, book.title, book.description],
+      where: 'authors = ? AND title = ? AND description = ? AND library = ?',
+      whereArgs: [book.authors, book.title, book.description, book.library],
     );
     return existingBooks.isNotEmpty;
   }
@@ -201,6 +202,7 @@ class DatabaseProvider {
         authors: maps[index]['authors'],
         image: maps[index]['image'],
         description: maps[index]['description'],
+        library: maps[index]['library'],
       );
     });
   }

@@ -38,7 +38,7 @@ class AppRoutes {
       case myBooks:
         return MaterialPageRoute(builder: (_) => MyBooks());
       case deleteBook:
-        return MaterialPageRoute(builder: (_) => BookDeletePage(book: DBBook(id:1, title: '', authors: '', description: '', image: ''),));
+        return MaterialPageRoute(builder: (_) => BookDeletePage(book: DBBook(id:1, title: '', authors: '', description: '', image: '',library: ''),));
       default:
         return MaterialPageRoute(
           builder: (_) =>

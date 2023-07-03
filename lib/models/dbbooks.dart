@@ -4,6 +4,7 @@ class DBBook {
   final String authors;
   final String image;
   final String description;
+  final String library;
 
   DBBook({
     this.id,
@@ -11,6 +12,7 @@ class DBBook {
     required this.authors,
     required this.image,
     required this.description,
+    required this.library,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class DBBook {
       'authors': authors,
       'image': image,
       'description': description,
+      'library': library,
     };
   }
 }

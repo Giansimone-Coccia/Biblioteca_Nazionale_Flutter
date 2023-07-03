@@ -184,6 +184,7 @@ class _MyBooksState extends State<MyBooks> with WidgetsBindingObserver {
         authors: '',
         description: '',
         image: '',
+        library: '',
       ),
     );
   }

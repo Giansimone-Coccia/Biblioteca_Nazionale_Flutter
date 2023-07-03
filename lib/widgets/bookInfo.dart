@@ -117,6 +117,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                     authors: widget.authors,
                     image: widget.image,
                     description: widget.description,
+                    library: library,
                   );
                   try {
                     bool bookExists = await _databaseProvider.checkBookExists(book);
