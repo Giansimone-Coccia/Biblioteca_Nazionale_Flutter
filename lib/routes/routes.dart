@@ -1,9 +1,11 @@
 import 'package:bib_nazionale_flutter/screens/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:google_books_api/google_books_api.dart';
 import '../main.dart';
 import '../screens/homepage.dart';
 import '../screens/login.dart';
 import '../screens/register.dart';
+import '../widgets/bookDelete.dart';
 import '../widgets/bookInfo.dart';
 
 class AppRoutes {
@@ -13,6 +15,8 @@ class AppRoutes {
   static const String homepage = '/homepage';
   static const String profile = '/profile';
   static const String bookInfo = '/bookeInfoPage';
+  static const String deleteBook = '/deleteBooks';
+
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {

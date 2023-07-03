@@ -7,7 +7,7 @@ class GoogleApi{
 
     Future<List<Book>> getListOfBookByName(String bookName) async {
       List<Book> books = await GoogleBooksApi().searchBooks(
-        bookName,
+        bookName.toString(),
         //maxResults: 20,
         printType: PrintType.books,
         orderBy: OrderBy.relevance,
