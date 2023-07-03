@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -26,12 +29,18 @@ class BookDetailsPage extends StatefulWidget {
 
 class _BookDetailsPageState extends State<BookDetailsPage> {
   List<String> completeList = [];
+  List<Marker> markerList = [];
   bool _bookExists = false;
 
   @override
   void initState() {
     super.initState();
-    getLibrary(widget.title);
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    await getLibrary(widget.title);
+    addMarkersToMap();
   }
 
   @override
@@ -64,11 +73,39 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
               SizedBox(height: 16.0),
               BookInfo(description: widget.description),
               SizedBox(height: 16.0),
-              DropdownMenu(dropdownItems: completeList),
+              Container(
+                height: 200.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: GoogleMap(
+                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                      new Factory<OneSequenceGestureRecognizer>(
+                            () => new EagerGestureRecognizer(),
+                      ),
+                    ].toSet(),
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(41.87194, 12.56738),
+                      zoom: 5,
+                    ),
+                    markers: Set<Marker>.from(markerList),
+                  ),
+                ) // Indicatore di caricamento
+              ),
               SizedBox(height: 16.0),
               RequestBookButton(
                 onPressed: () async {
-                  // Resto del codice...
+                  
                 },
               ),
               SizedBox(height: 16.0),
@@ -80,21 +117,64 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
     );
   }
 
-  void getLibrary(String bookName) async {
+  Future<List<String>> getLibrary(String bookName) async {
     final searchApi = SearchApi();
     final bookId = await searchApi.getBookId(bookName);
+    print(bookId);
     if (bookId != null) {
       final libraryApi = LibraryApi();
       final shelfmarks = await libraryApi.getShelfmarks(bookId);
       if (shelfmarks != null && shelfmarks.isNotEmpty) {
+        Set<String> set = Set<String>.from(shelfmarks);
+        List<String> shelfmarksMulti = shelfmarks.toList();
+
+        for (String libraryName in shelfmarks) {
+          final apiKey = 'AIzaSyCtTj2ohggFHtNX2asYNXL1kj31pO8wO_Y'; // Sostituisci con la tua chiave API
+          final encodedLibraryName = Uri.encodeQueryComponent(libraryName);
+          final url =
+              'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedLibraryName&key=$apiKey';
+
+          final response = await http.get(Uri.parse(url));
+          if (response.statusCode == 200) {
+            final data = json.decode(response.body);
+            if (data['status'] == 'OK') {
+              final results = data['results'] as List<dynamic>;
+              if (results.isNotEmpty) {
+                final location = results[0]['geometry']['location'];
+                final latitude = location['lat'];
+                final longitude = location['lng'];
+
+                setState(() {
+                  markerList.add(
+                    Marker(
+                      markerId: MarkerId(libraryName),
+                      position: LatLng(latitude, longitude),
+                      infoWindow: InfoWindow(
+                        title: libraryName,
+                      ),
+                    ),
+                  );
+                });
+              }
+            }
+          }
+        }
+
         setState(() {
-          completeList = shelfmarks;
+          completeList = shelfmarksMulti;
           _bookExists = true;
         });
+        return shelfmarksMulti;
       }
     }
+    return [];
+  }
+
+  void addMarkersToMap() async {
+
   }
 }
+
 
 class BookHeader extends StatelessWidget {
   final String image;
@@ -183,14 +263,17 @@ class _BookInfoState extends State<BookInfo> {
                 textPainter.layout(maxWidth: constraints.maxWidth);
                 final textHeight = textPainter.size.height;
 
-                if (textHeight > 5 * DefaultTextStyle.of(context).style.fontSize!) {
+                if (textHeight >
+                    5 * DefaultTextStyle.of(context).style.fontSize!) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.description,
                         maxLines: isExpanded ? null : 5,
-                        overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                        overflow: isExpanded
+                            ? TextOverflow.visible
+                            : TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 8.0),
                       Row(
@@ -221,7 +304,9 @@ class _BookInfoState extends State<BookInfo> {
                   return Text(
                     widget.description,
                     maxLines: isExpanded ? null : 5,
-                    overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                    overflow: isExpanded
+                        ? TextOverflow.visible
+                        : TextOverflow.ellipsis,
                   );
                 }
               },
