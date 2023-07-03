@@ -26,12 +26,24 @@ class BookDetailsPage extends StatefulWidget {
 class _BookDetailsPageState extends State<BookDetailsPage> {
   DatabaseProvider _databaseProvider = DatabaseProvider();
   String _message = '';
+  bool _bookExists = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Resto del codice
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: BackButton(
+          color: customPurpleColor,
+        ),
+        bottom: PreferredSize(
+          child: Container(
+            color: customPurpleColor,
+            height: 2.0,
+          ),
+          preferredSize: Size.fromHeight(1.0),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -46,26 +58,35 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
               SizedBox(height: 16.0),
               BookInfo(description: widget.description),
               SizedBox(height: 16.0),
-              RequestBookButton(
-                onPressed: () async {
-                  DBBook book = DBBook(
-                    title: widget.title,
-                    authors: widget.authors,
-                    image: widget.image,
-                    description: widget.description,
-                  );
-                  try {
+            RequestBookButton(
+              onPressed: () async {
+                DBBook book = DBBook(
+                  title: widget.title,
+                  authors: widget.authors,
+                  image: widget.image,
+                  description: widget.description,
+                );
+                try {
+                  bool bookExists = await _databaseProvider.checkBookExists(book);
+                  if (bookExists) {
+                    setState(() {
+                      _bookExists = true;
+                      _message = 'Book already exists!';
+                    });
+                  } else {
                     await _databaseProvider.addBook(book);
                     setState(() {
+                      _bookExists = false;
                       _message = 'Book successfully requested!';
                     });
-                  } catch (e) {
-                    setState(() {
-                      _message = 'Failed to request book. Please try again.';
-                    });
                   }
-                },
-              ),
+                } catch (e) {
+                  setState(() {
+                    _message = 'Failed to request book. Please try again.';
+                  });
+                }
+              },
+            ),
               SizedBox(height: 16.0),
               Text(
                 _message,
@@ -111,6 +132,7 @@ class BookHeader extends StatelessWidget {
             Center(
               child: Text(
                 title,
+                textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
             ),
@@ -156,50 +178,57 @@ class _BookInfoState extends State<BookInfo> {
             ),
             SizedBox(height: 8.0),
             LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final TextSpan text = TextSpan(
-                  text: widget.description,
-                  style: DefaultTextStyle.of(context).style,
-                );
-                final TextPainter textPainter = TextPainter(
-                  textAlign: TextAlign.right,
-                  text: text,
+              builder: (context, constraints) {
+                final textSpan = TextSpan(text: widget.description);
+                final textPainter = TextPainter(
+                  text: textSpan,
+                  maxLines: isExpanded ? null : 5,
                   textDirection: TextDirection.ltr,
                 );
                 textPainter.layout(maxWidth: constraints.maxWidth);
-                final int actualLines = textPainter.computeLineMetrics().length;
+                final textHeight = textPainter.size.height;
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    actualLines > 5
-                        ? Text(
-                      widget.description,
-                      maxLines: isExpanded ? 5 : null,
-                      overflow: isExpanded
-                          ? TextOverflow.ellipsis
-                          : TextOverflow.visible,
-                    )
-                        : Text(widget.description),
-                    actualLines > 5
-                        ? GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isExpanded = !isExpanded;
-                        });
-                      },
-                      child: Text(
-                        isExpanded ? 'Read more' : 'Read less',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: customPurpleColor,
-                        ),
-                        textAlign: TextAlign.right,
+                if (textHeight > 5 * DefaultTextStyle.of(context).style.fontSize!) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.description,
+                        maxLines: isExpanded ? null : 5,
+                        overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
                       ),
-                    )
-                        : Container(),
-                  ],
-                );
+                      SizedBox(height: 8.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                });
+                              },
+                              child: Text(
+                                isExpanded ? 'Read less' : 'Read more',
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: customPurpleColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                } else {
+                  return Text(
+                    widget.description,
+                    maxLines: isExpanded ? null : 5,
+                    overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                  );
+                }
               },
             ),
           ],

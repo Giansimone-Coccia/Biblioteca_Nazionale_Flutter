@@ -45,6 +45,7 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
+
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[

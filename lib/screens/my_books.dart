@@ -105,7 +105,7 @@ class _MyBooksState extends State<MyBooks> with WidgetsBindingObserver {
     );
   }
 
-  void _navigateToBookDeletePage(DBBook book) {
+  void _navigateToBookDeletePage(DBBook book, BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
