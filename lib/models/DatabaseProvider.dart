@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -50,9 +52,19 @@ class DatabaseProvider {
       },
     );
   }
-
-  Future<void> registerUser(String email, String password) async {
+  Future<bool> registerUser(String email, String password) async {
     final db = await database;
+
+    // Verifica se l'email è già presente nel database
+    final count = Sqflite.firstIntValue(await db.rawQuery(
+      'SELECT COUNT(*) FROM users WHERE email = ?',
+      [email],
+    ));
+
+    if (count != null && count > 0) {
+      return true;
+    }
+    // Inserisci i dati dell'utente nel database
     await db.insert(
       'users',
       {
@@ -61,8 +73,8 @@ class DatabaseProvider {
         'isLogged': 0,
       },
     );
+    return false;
   }
-
   Future<bool> loginUser(String email, String password) async {
     final db = await database;
     final result = await db.query(

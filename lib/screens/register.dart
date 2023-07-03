@@ -59,7 +59,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   bool isValidEmail(String email) {
     final RegExp emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
@@ -67,7 +67,8 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   bool isValidPassword(String password) {
-    final RegExp passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$');
+    final RegExp passwordRegex =
+        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$');
     return passwordRegex.hasMatch(password);
   }
 
@@ -81,9 +82,33 @@ class _RegisterFormState extends State<RegisterForm> {
         if (isValidEmail(email)) {
           if (isValidPassword(password)) {
             // Chiamata al metodo registerUser su databaseProvider
-            databaseProvider.registerUser(email, password);
-
-            showDialog(
+            databaseProvider
+                .registerUser(email, password)
+                .then((isAlredyPresent) => {
+                      if (isAlredyPresent)
+                        {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Warining'),
+                                content: Text(
+                                    'Email already present in the database'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('I understand'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        }
+            else
+            {
+              showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
@@ -103,14 +128,17 @@ class _RegisterFormState extends State<RegisterForm> {
                   ],
                 );
               },
-            );
+            )
+          }
+                    });
           } else {
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Invalid Password'),
-                  content: Text('Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.'),
+                  content: Text(
+                      'Password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.'),
                   actions: [
                     TextButton(
                       child: Text('OK'),
@@ -181,8 +209,6 @@ class _RegisterFormState extends State<RegisterForm> {
       );
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -307,21 +333,24 @@ class CustomTextField extends StatelessWidget {
       decoration: BoxDecoration(
         color: customContainerColor,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: customPurpleColor, width: 2.0), // Aggiungi questa linea per il bordo viola
+        border: Border.all(
+            color: customPurpleColor,
+            width: 2.0), // Aggiungi questa linea per il bordo viola
       ),
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: customPurpleColor), // Aggiungi questa linea per il testo del placeholder viola
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          hintStyle: TextStyle(color: customPurpleColor),
+          // Aggiungi questa linea per il testo del placeholder viola
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           border: InputBorder.none,
         ),
-        style: TextStyle(color: Colors.black), // Aggiungi questa linea per il testo della casella di testo nero
+        style: TextStyle(color: Colors.black),
+        // Aggiungi questa linea per il testo della casella di testo nero
         obscureText: obscureText,
       ),
     );
   }
 }
-
-
