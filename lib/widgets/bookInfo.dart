@@ -26,6 +26,7 @@ class BookDetailsPage extends StatefulWidget {
 class _BookDetailsPageState extends State<BookDetailsPage> {
   DatabaseProvider _databaseProvider = DatabaseProvider();
   String _message = '';
+  bool _bookExists = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,26 +47,35 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
               SizedBox(height: 16.0),
               BookInfo(description: widget.description),
               SizedBox(height: 16.0),
-              RequestBookButton(
-                onPressed: () async {
-                  DBBook book = DBBook(
-                    title: widget.title,
-                    authors: widget.authors,
-                    image: widget.image,
-                    description: widget.description,
-                  );
-                  try {
+            RequestBookButton(
+              onPressed: () async {
+                DBBook book = DBBook(
+                  title: widget.title,
+                  authors: widget.authors,
+                  image: widget.image,
+                  description: widget.description,
+                );
+                try {
+                  bool bookExists = await _databaseProvider.checkBookExists(book);
+                  if (bookExists) {
+                    setState(() {
+                      _bookExists = true;
+                      _message = 'Book already exists!';
+                    });
+                  } else {
                     await _databaseProvider.addBook(book);
                     setState(() {
+                      _bookExists = false;
                       _message = 'Book successfully requested!';
                     });
-                  } catch (e) {
-                    setState(() {
-                      _message = 'Failed to request book. Please try again.';
-                    });
                   }
-                },
-              ),
+                } catch (e) {
+                  setState(() {
+                    _message = 'Failed to request book. Please try again.';
+                  });
+                }
+              },
+            ),
               SizedBox(height: 16.0),
               Text(
                 _message,

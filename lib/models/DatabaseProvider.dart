@@ -161,6 +161,16 @@ class DatabaseProvider {
     );
   }
 
+  Future<bool> checkBookExists(DBBook book) async {
+    final db = await database;
+    final List<Map<String, dynamic>> existingBooks = await db.query(
+      'books',
+      where: 'authors = ? AND title = ? AND description = ?',
+      whereArgs: [book.authors, book.title, book.description],
+    );
+    return existingBooks.isNotEmpty;
+  }
+
   Future<void> updateBook(DBBook book) async {
     final db = await database;
     await db.update(
