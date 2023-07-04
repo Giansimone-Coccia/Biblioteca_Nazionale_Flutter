@@ -78,35 +78,34 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
               BookInfo(description: widget.description),
               SizedBox(height: 16.0),
               Container(
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: GoogleMap(
-                      gestureRecognizers:
-                          <Factory<OneSequenceGestureRecognizer>>[
-                        new Factory<OneSequenceGestureRecognizer>(
-                          () => new EagerGestureRecognizer(),
-                        ),
-                      ].toSet(),
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(41.87194, 12.56738),
-                        zoom: 5,
-                      ),
-                      markers: Set<Marker>.from(markerList),
+                height: 200.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
                     ),
-                  ) // Indicatore di caricamento
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: GoogleMap(
+                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                      new Factory<OneSequenceGestureRecognizer>(
+                        () => new EagerGestureRecognizer(),
+                      ),
+                    ].toSet(),
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(41.87194, 12.56738),
+                      zoom: 5,
+                    ),
+                    markers: Set<Marker>.from(markerList),
                   ),
+                ),
+              ),
               SizedBox(height: 16.0),
               Text(library),
               SizedBox(height: 16.0),
@@ -142,6 +141,11 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                                 'Failed to request book. Please try again.';
                           });
                         }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(_message),
+                          ),
+                        );
                       },
                     ),
               SizedBox(height: 16.0),

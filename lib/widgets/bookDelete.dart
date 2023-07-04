@@ -1,7 +1,9 @@
+import 'package:bib_nazionale_flutter/widgets/my_books.dart';
 import 'package:flutter/material.dart';
 
 import '../models/DatabaseProvider.dart';
 import '../models/dbbooks.dart';
+import '../routes/routes.dart';
 import 'bookInfo.dart';
 
 final Color customPurpleColor = const Color(0xFF6D77FB);
@@ -157,7 +159,14 @@ class DeleteBookButton extends StatelessWidget {
   Future<void> _deleteBook(BuildContext context) async {
     await DatabaseProvider().deleteBook(book.id!);
 
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
+    Navigator.popUntil(context, ModalRoute.withName('/'));
+    Navigator.pushNamed(context, AppRoutes.myBooks);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Book deleted successfully!'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 }
