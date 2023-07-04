@@ -93,7 +93,7 @@ class _RegisterFormState extends State<RegisterForm> {
                               return AlertDialog(
                                 title: Text('Warning'),
                                 content: Text(
-                                    'Email already present in the database'),
+                                    'User already present in the database. App allows an account only'),
                                 actions: [
                                   TextButton(
                                     child: Text('I understand'),

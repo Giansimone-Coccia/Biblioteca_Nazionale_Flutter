@@ -58,11 +58,10 @@ class DatabaseProvider {
 
     // Verifica se l'email è già presente nel database
     final count = Sqflite.firstIntValue(await db.rawQuery(
-      'SELECT COUNT(*) FROM users WHERE email = ?',
-      [email],
+      'SELECT COUNT(*) FROM users',
     ));
 
-    if (count != null && count > 0) {
+    if (count != null && count == 1) {
       return true;
     }
     // Inserisci i dati dell'utente nel database
