@@ -41,7 +41,10 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   void initState() {
     super.initState();
     _loadData();
+    print("dio1");
   }
+
+
 
   Future<void> _loadData() async {
     await getLibrary(widget.title);
@@ -49,6 +52,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("dio2");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -156,7 +160,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   Future<List<String>> getLibrary(String bookName) async {
     final searchApi = SearchApi();
     final bookId = await searchApi.getBookId(bookName);
-    print(bookId);
+    print('bookId4: $bookId');
     if (bookId != null) {
       final libraryApi = LibraryApi();
       final shelfmarks = await libraryApi.getShelfmarks(bookId);
@@ -165,6 +169,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
         List<String> shelfmarksMulti = shelfmarks.toList();
 
         for (String libraryName in shelfmarks) {
+          print('libraryName: $libraryName');
           final apiKey =
               'AIzaSyCtTj2ohggFHtNX2asYNXL1kj31pO8wO_Y'; // Sostituisci con la tua chiave API
           final encodedLibraryName = Uri.encodeQueryComponent(libraryName);
@@ -197,6 +202,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                     ),
                   );
                 });
+                print('Added marker for library: $libraryName');
               }
             }
           }
@@ -205,6 +211,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
           completeList = shelfmarksMulti;
           _bookExists = true;
         });
+        print('Shelfmarks Multi: $shelfmarksMulti');
         return shelfmarksMulti;
       }
     }
