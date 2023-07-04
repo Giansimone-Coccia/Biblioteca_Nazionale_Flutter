@@ -41,7 +41,6 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   void initState() {
     super.initState();
     _loadData();
-    print("dio1");
   }
 
 
@@ -52,7 +51,6 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("dio2");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -164,7 +162,6 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   Future<List<String>> getLibrary(String bookName) async {
     final searchApi = SearchApi();
     final bookId = await searchApi.getBookId(bookName);
-    print('bookId4: $bookId');
     if (bookId != null) {
       final libraryApi = LibraryApi();
       final shelfmarks = await libraryApi.getShelfmarks(bookId);
