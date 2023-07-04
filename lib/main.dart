@@ -1,11 +1,17 @@
-import 'package:bib_nazionale_flutter/widgets/my_books.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'routes/routes.dart';
+import 'widgets/my_books.dart';
 
 final GlobalKey<NavigatorState> homeKey = GlobalKey<NavigatorState>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(
     MultiProvider(
       providers: [
@@ -15,7 +21,6 @@ void main() {
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
@@ -44,7 +49,6 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
