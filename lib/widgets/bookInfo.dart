@@ -151,7 +151,6 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                       },
                     ),
               SizedBox(height: 16.0),
-              // Resto del codice...
             ],
           ),
         ),
