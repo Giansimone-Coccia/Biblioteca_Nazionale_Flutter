@@ -20,7 +20,6 @@ class GeocodingApi {
       }
       return null;
     } catch (e) {
-      // Gestione degli errori
       return null;
     }
   }

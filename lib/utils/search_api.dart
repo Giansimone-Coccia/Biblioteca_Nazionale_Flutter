@@ -21,7 +21,6 @@ class SearchApi {
     } catch (e) {
       print(e);
       print("Errore getBookId fallito");
-      // Gestione degli errori
     }
 
     return [];

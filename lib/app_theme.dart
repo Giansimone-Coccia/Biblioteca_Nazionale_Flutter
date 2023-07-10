@@ -5,7 +5,6 @@ class AppTheme {
     primaryColor: Color(0xFF6D77FB),
     //accentColor: Colors.orange,
     backgroundColor: Colors.white,
-    // altre proprietà del tema
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -14,6 +13,5 @@ class AppTheme {
    // accentColor: Colors.teal,
     //fontFamily: 'Roboto',
     backgroundColor: Colors.white,
-    // altre proprietà del tema
   );
 }

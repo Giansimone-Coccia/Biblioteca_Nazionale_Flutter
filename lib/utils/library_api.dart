@@ -39,7 +39,6 @@ class LibraryApi {
     } catch (e) {
       print(e);
       print("Errore getShelfmarks fallito");
-      // Gestione degli errori
       return shelfmarks;
     }
   }

@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xFF6D77FB),
         backgroundColor: Colors.white,
-        // ...definisci altri colori personalizzati qui...
       ),
       initialRoute: AppRoutes.home,
       onGenerateRoute: AppRoutes.generateRoute,

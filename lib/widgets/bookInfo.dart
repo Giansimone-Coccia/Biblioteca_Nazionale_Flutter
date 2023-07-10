@@ -172,7 +172,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
         for (String libraryName in shelfmarks) {
           print('libraryName: $libraryName');
           final apiKey =
-              'AIzaSyCtTj2ohggFHtNX2asYNXL1kj31pO8wO_Y'; // Sostituisci con la tua chiave API
+              'AIzaSyCtTj2ohggFHtNX2asYNXL1kj31pO8wO_Y';
           final encodedLibraryName = Uri.encodeQueryComponent(libraryName);
           final url =
               'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedLibraryName&key=$apiKey';

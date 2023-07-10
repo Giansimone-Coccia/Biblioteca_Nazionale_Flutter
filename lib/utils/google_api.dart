@@ -1,7 +1,6 @@
 import 'package:google_books_api/google_books_api.dart';
 
 class GoogleApi{
-    // Costruttore
     GoogleApi();
 
 
